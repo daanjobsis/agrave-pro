@@ -1,4 +1,3 @@
-# agrave-pro
 # Agrave Pro
 
 Agràve Pro is a handwritten typeface for longer texts, with open counters, short ascenders and descenders, uniform strokes, and solid legibility. The family offers three weights and supports multiple languages, with ligatures, unique accented glyphs, small caps, and a full range of figure styles.
