@@ -13,7 +13,7 @@ See the OFL.txt file for details.
 
 - `sources/` — Glyphs source files
 - `fonts/` — exported TTF files
-- `documentation/` — specimens and images (optional)
+- `documentation/` —preview images
 
 ## Building the fonts
 
