@@ -18,3 +18,7 @@ See the OFL.txt file for details.
 ## Building the fonts
 
 The fonts are built from Glyphs sources.
+
+## Specimens
+
+Preview images can be found in the `documentation/` folder.
