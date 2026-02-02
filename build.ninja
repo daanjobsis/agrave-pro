@@ -1,0 +1,291 @@
+# instantiateUfo: Create instance UFOs from a Glyphs or designspace file
+rule instantiateUfo
+  command = /Library/Frameworks/Python.framework/Versions/3.14/bin/python3 $
+      -m gftools.builder.jobrunner fontmake -i "$instance_name" -o ufo $
+      $fontmake_type $in $args $stamp
+  description = instantiateUfo
+
+# buildTTF: Build a TTF from a source file
+rule buildTTF
+  command = /Library/Frameworks/Python.framework/Versions/3.14/bin/python3 $
+      -m gftools.builder.jobrunner fontmake --output-path $out -o ttf $
+      $fontmake_type $in $args $stamp
+  description = buildTTF
+
+# autohint: Run gftools-autohint
+rule autohint
+  command = /Library/Frameworks/Python.framework/Versions/3.14/bin/python3 $
+      -m gftools.builder.jobrunner gftools-autohint $args -o $out $in $stamp
+  description = autohint
+
+# fix: Run gftools-fix
+rule fix
+  command = /Library/Frameworks/Python.framework/Versions/3.14/bin/python3 $
+      -m gftools.builder.jobrunner gftools-fix-font -o $out $args $in $stamp
+  description = fix
+
+# compress: Compress to webfont
+rule compress
+  command = /Library/Frameworks/Python.framework/Versions/3.14/bin/python3 $
+      -m gftools.builder.jobrunner fonttools ttLib.woff2 compress -o $out $
+      $in $stamp
+  description = compress
+
+# remapLayout: Run gftools-remap-layout to change a font's layout rules
+rule remapLayout
+  command = /Library/Frameworks/Python.framework/Versions/3.14/bin/python3 $
+      -m gftools.builder.jobrunner gftools-remap-layout -o $out $in $args $
+      $stamp
+  description = remapLayout
+
+# rename: Rename a font
+rule rename
+  command = /Library/Frameworks/Python.framework/Versions/3.14/bin/python3 $
+      -m gftools.builder.jobrunner gftools-rename-font -o $out $args $in $
+      "$name" $stamp
+  description = rename
+
+# buildOTF: Build a OTF from a source file
+rule buildOTF
+  command = /Library/Frameworks/Python.framework/Versions/3.14/bin/python3 $
+      -m gftools.builder.jobrunner fontmake --output-path $out -o otf $
+      $fontmake_type $in $args $stamp
+  description = buildOTF
+
+# copy: Copy a file
+rule copy
+  command = /Library/Frameworks/Python.framework/Versions/3.14/bin/python3 $
+      -m gftools.builder.jobrunner cp $in $out $stamp
+  description = copy
+
+# Generating sources/instance_ufos/AgravePro-Light.ufo.json
+build sources/instance_ufos/AgravePro-Light.ufo.json: instantiateUfo $
+    sources/AgravePro.glyphs
+  operation = instantiateUfo
+  instance_name = Agrave Pro Light
+  fontmake_type = -g
+  fontmake_args =  --verbose WARNING 
+  args =  --ufo-structure=json --instance-dir sources/instance_ufos
+# Generating sources/instance_ufos/AgravePro-Regular.ufo.json
+build sources/instance_ufos/AgravePro-Regular.ufo.json: instantiateUfo $
+    sources/AgravePro.glyphs
+  operation = instantiateUfo
+  instance_name = Agrave Pro Regular
+  fontmake_type = -g
+  fontmake_args =  --verbose WARNING 
+  args =  --ufo-structure=json --instance-dir sources/instance_ufos
+# Generating sources/instance_ufos/AgravePro-Bold.ufo.json
+build sources/instance_ufos/AgravePro-Bold.ufo.json: instantiateUfo $
+    sources/AgravePro.glyphs
+  operation = instantiateUfo
+  instance_name = Agrave Pro Bold
+  fontmake_type = -g
+  fontmake_args =  --verbose WARNING 
+  args =  --ufo-structure=json --instance-dir sources/instance_ufos
+# Generating fonts/webfonts/AgravePro-Light.woff2
+build fonts/webfonts/AgravePro-Light.woff2: compress $
+    fonts/ttf/AgravePro-Light.ttf
+  operation = compress
+# Generating /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmp6rqj5wne
+build /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmp6rqj5wne: $
+    remapLayout fonts/ttf/AgravePro-Light.ttf
+  operation = remapLayout
+  args = 'smcp -> ccmp'
+# Generating /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmp4bwd43fd
+build /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmp4bwd43fd: $
+    remapLayout fonts/otf/AgravePro-Light.otf
+  operation = remapLayout
+  args = 'smcp -> ccmp'
+# Generating fonts/webfonts/AgravePro-Regular.woff2
+build fonts/webfonts/AgravePro-Regular.woff2: compress $
+    fonts/ttf/AgravePro-Regular.ttf
+  operation = compress
+# Generating /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmpor20ly5z
+build /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmpor20ly5z: $
+    remapLayout fonts/ttf/AgravePro-Regular.ttf
+  operation = remapLayout
+  args = 'smcp -> ccmp'
+# Generating /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmptacodllo
+build /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmptacodllo: $
+    remapLayout fonts/otf/AgravePro-Regular.otf
+  operation = remapLayout
+  args = 'smcp -> ccmp'
+# Generating fonts/webfonts/AgravePro-Bold.woff2
+build fonts/webfonts/AgravePro-Bold.woff2: compress $
+    fonts/ttf/AgravePro-Bold.ttf
+  operation = compress
+# Generating /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmp9swexdu2
+build /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmp9swexdu2: $
+    remapLayout fonts/ttf/AgravePro-Bold.ttf
+  operation = remapLayout
+  args = 'smcp -> ccmp'
+# Generating /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmp6dd0jhtz
+build /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmp6dd0jhtz: $
+    remapLayout fonts/otf/AgravePro-Bold.otf
+  operation = remapLayout
+  args = 'smcp -> ccmp'
+# Generating /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmp000g87j6
+build /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmp000g87j6: $
+    buildTTF sources/instance_ufos/AgravePro-Light.ufo.json
+  operation = buildTTF
+  args = --filter ...  --filter FlattenComponentsFilter --filter $
+      DecomposeTransformedComponentsFilter
+  fontmake_type = -u
+  fontmake_args =  --verbose WARNING 
+# Generating /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmplh8ddkk3
+build /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmplh8ddkk3: $
+    buildOTF sources/instance_ufos/AgravePro-Light.ufo.json
+  operation = buildOTF
+  args = --filter ...  --filter FlattenComponentsFilter --filter $
+      DecomposeTransformedComponentsFilter
+  fontmake_type = -u
+  fontmake_args =  --verbose WARNING 
+# Generating /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmpd_ci3o73
+build /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmpd_ci3o73: $
+    autohint /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmp000g87j6
+  operation = autohint
+  args = --fail-ok 
+# Generating fonts/ttf/AgravePro-Light.ttf
+build fonts/ttf/AgravePro-Light.ttf: fix $
+    /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmpd_ci3o73
+  operation = fix
+  args = 
+# Generating /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmp9gfsf0jr
+build /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmp9gfsf0jr: rename $
+    /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmp6rqj5wne
+  operation = rename
+  args = --just-family
+  name = Agrave Pro SC
+# Generating fonts/ttf/AgraveProSC-Light.ttf
+build fonts/ttf/AgraveProSC-Light.ttf: fix $
+    /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmp9gfsf0jr
+  operation = fix
+  args = 
+# Generating fonts/otf/AgravePro-Light.otf
+build fonts/otf/AgravePro-Light.otf: fix $
+    /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmplh8ddkk3
+  operation = fix
+  args = 
+# Generating /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmpebx6m7am
+build /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmpebx6m7am: rename $
+    /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmp4bwd43fd
+  operation = rename
+  args = --just-family
+  name = Agrave Pro SC
+# Generating fonts/otf/AgraveProSC-Light.otf
+build fonts/otf/AgraveProSC-Light.otf: fix $
+    /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmpebx6m7am
+  operation = fix
+  args = 
+# Generating /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmpsnrdx77v
+build /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmpsnrdx77v: $
+    buildTTF sources/instance_ufos/AgravePro-Regular.ufo.json
+  operation = buildTTF
+  args = --filter ...  --filter FlattenComponentsFilter --filter $
+      DecomposeTransformedComponentsFilter
+  fontmake_type = -u
+  fontmake_args =  --verbose WARNING 
+# Generating /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmp37b95srk
+build /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmp37b95srk: $
+    buildOTF sources/instance_ufos/AgravePro-Regular.ufo.json
+  operation = buildOTF
+  args = --filter ...  --filter FlattenComponentsFilter --filter $
+      DecomposeTransformedComponentsFilter
+  fontmake_type = -u
+  fontmake_args =  --verbose WARNING 
+# Generating /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmp03nt_rai
+build /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmp03nt_rai: $
+    autohint /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmpsnrdx77v
+  operation = autohint
+  args = --fail-ok 
+# Generating fonts/ttf/AgravePro-Regular.ttf
+build fonts/ttf/AgravePro-Regular.ttf: fix $
+    /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmp03nt_rai
+  operation = fix
+  args = 
+# Generating /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmpegfxz49z
+build /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmpegfxz49z: rename $
+    /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmpor20ly5z
+  operation = rename
+  args = --just-family
+  name = Agrave Pro SC
+# Generating fonts/ttf/AgraveProSC-Regular.ttf
+build fonts/ttf/AgraveProSC-Regular.ttf: fix $
+    /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmpegfxz49z
+  operation = fix
+  args = 
+# Generating fonts/otf/AgravePro-Regular.otf
+build fonts/otf/AgravePro-Regular.otf: fix $
+    /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmp37b95srk
+  operation = fix
+  args = 
+# Generating /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmpc6kb2nro
+build /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmpc6kb2nro: rename $
+    /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmptacodllo
+  operation = rename
+  args = --just-family
+  name = Agrave Pro SC
+# Generating fonts/otf/AgraveProSC-Regular.otf
+build fonts/otf/AgraveProSC-Regular.otf: fix $
+    /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmpc6kb2nro
+  operation = fix
+  args = 
+# Generating /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmpz_p935g2
+build /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmpz_p935g2: $
+    buildTTF sources/instance_ufos/AgravePro-Bold.ufo.json
+  operation = buildTTF
+  args = --filter ...  --filter FlattenComponentsFilter --filter $
+      DecomposeTransformedComponentsFilter
+  fontmake_type = -u
+  fontmake_args =  --verbose WARNING 
+# Generating /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmp9abs6f2m
+build /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmp9abs6f2m: $
+    buildOTF sources/instance_ufos/AgravePro-Bold.ufo.json
+  operation = buildOTF
+  args = --filter ...  --filter FlattenComponentsFilter --filter $
+      DecomposeTransformedComponentsFilter
+  fontmake_type = -u
+  fontmake_args =  --verbose WARNING 
+# Generating /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmpk4357y47
+build /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmpk4357y47: $
+    autohint /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmpz_p935g2
+  operation = autohint
+  args = --fail-ok 
+# Generating fonts/ttf/AgravePro-Bold.ttf
+build fonts/ttf/AgravePro-Bold.ttf: fix $
+    /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmpk4357y47
+  operation = fix
+  args = 
+# Generating /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmpi5hvzv19
+build /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmpi5hvzv19: rename $
+    /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmp9swexdu2
+  operation = rename
+  args = --just-family
+  name = Agrave Pro SC
+# Generating fonts/ttf/AgraveProSC-Bold.ttf
+build fonts/ttf/AgraveProSC-Bold.ttf: fix $
+    /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmpi5hvzv19
+  operation = fix
+  args = 
+# Generating fonts/otf/AgravePro-Bold.otf
+build fonts/otf/AgravePro-Bold.otf: fix $
+    /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmp9abs6f2m
+  operation = fix
+  args = 
+# Generating /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmpyt5s12vv
+build /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmpyt5s12vv: rename $
+    /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmp6dd0jhtz
+  operation = rename
+  args = --just-family
+  name = Agrave Pro SC
+# Generating fonts/otf/AgraveProSC-Bold.otf
+build fonts/otf/AgraveProSC-Bold.otf: fix $
+    /var/folders/gm/n2l2m5qd2sd_6zt9drjg72mc0000gp/T/tmpyt5s12vv
+  operation = fix
+  args = 
+default fonts/webfonts/AgravePro-Light.woff2 $
+    fonts/webfonts/AgravePro-Regular.woff2 $
+    fonts/webfonts/AgravePro-Bold.woff2 fonts/ttf/AgraveProSC-Light.ttf $
+    fonts/otf/AgraveProSC-Light.otf fonts/ttf/AgraveProSC-Regular.ttf $
+    fonts/otf/AgraveProSC-Regular.otf fonts/ttf/AgraveProSC-Bold.ttf $
+    fonts/otf/AgraveProSC-Bold.otf
