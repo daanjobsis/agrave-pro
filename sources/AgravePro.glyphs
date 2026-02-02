@@ -5,7 +5,10 @@ DisplayStrings = (
 "A/rupeeIndian A/rupeeIndian.osf A\012",
 "o/ijacute/space/ijacute.sc/space/IJacute \012íj/acutecomb/space/iacute.sc/j.sc ´/space/space ÍJ/acutecomb",
 "/Lcaron/lcaron/l.sc/lcaron.sc \012/Dcaron/dcaron/d.sc/caroncomb/dcaron.sc \012/Tcaron/tcaron/tcaron.sc",
-"/dotaccentcomb/space/edotaccent.sc/space/zdotaccent.sc/space/cdotaccent.sc/space/gdotaccent.sc/space/idotaccent.sc \012/gravecomb/space/agrave.sc/space/ugrave.sc/space/egrave.sc/space/ograve.sc/space/ygrave.sc/space/wgrave.sc/space/igrave.sc \012/acutecomb/space/aacute.sc/space/aeacute.sc/space/cacute.sc/space/iacute.sc/space/racute.sc/space/lacute.sc/space/eacute.sc/space/uacute.sc/space/zacute.sc/space/oacute.sc/space/oslashacute.sc/space/sacute.sc/space/nacute.sc/space/yacute.sc/space/wacute.sc \012/tildecomb/space/atilde.sc/space/etilde.sc/space/ntilde.sc/space/otilde.sc/space/ytilde.sc/space/itilde.sc/space/utilde.sc \012/dieresiscomb/space/adieresis.sc/space/odieresis.sc/space/edieresis.sc/space/wdieresis.sc/space/ydieresis.sc/space/udieresis.sc/space/idieresis.sc \012/hungarumlautcomb/space/ohungarumlaut.sc/space/uhungarumlaut.sc \012/circumflexcomb/space/acircumflex.sc/space/ecircumflex.sc/space/ccircumflex.sc/space/gcircumflex.sc/space/jcircumflex.sc/space/ocircumflex.sc/space/ucircumflex.sc/space/hcircumflex.sc/space/icircumflex.sc/space/wcircumflex.sc/space/scircumflex.sc/space/ycircumflex.sc/space \012/caroncomb/space/ccaron.sc/space/dcaron.sc/space/ecaron.sc/space/gcaron.sc/space/jcaron.sc/space/ncaron.sc/space/tcaron.sc/space/zcaron.sc/space/rcaron.sc/space/scaron.sc \012/brevecomb/space/abreve.sc/space/ebreve.sc/space/obreve.sc/space/ibreve.sc/space/gbreve.sc/space/ubreve.sc \012/ringcomb/space/aring.sc/space/uring.sc/space/aringacute.sc \012/macroncomb/space/amacron.sc/space/omacron.sc/space/umacron.sc/space/ymacron.sc/space/emacron.sc/space/imacron.sc \012/dotbelowcomb/space/adotbelow.sc/space/edotbelow.sc/space/odotbelow.sc/space/idotbelow.sc/space/udotbelow.sc \012/commaaccentcomb/space/kcommaaccent.sc/space/lcommaaccent.sc/space/ncommaaccent.sc/space/gcommaaccent.sc/space/rcommaaccent.sc/space/scommaaccent.sc/space/tcommaaccent.sc \012/cedillacomb/space/ccedilla.sc/space/tcedilla.sc/space/scedilla.sc/space \012/ogonekcomb/space/aogonek.sc/space/eogonek.sc/space/iogonek.sc/space/uogonek.sc \012\012/idotless.sc/space/iacute.sc/space/ibreve.sc/space/icircumflex.sc/space/idieresis.sc/space/idotaccent.sc/space/idotbelow.sc/space/igrave.sc/space/imacron.sc/space/iogonek.sc/space/itilde.sc"
+"/dotaccentcomb/space/edotaccent.sc/space/zdotaccent.sc/space/cdotaccent.sc/space/gdotaccent.sc/space/idotaccent.sc \012/gravecomb/space/agrave.sc/space/ugrave.sc/space/egrave.sc/space/ograve.sc/space/ygrave.sc/space/wgrave.sc/space/igrave.sc \012/acutecomb/space/aacute.sc/space/aeacute.sc/space/cacute.sc/space/iacute.sc/space/racute.sc/space/lacute.sc/space/eacute.sc/space/uacute.sc/space/zacute.sc/space/oacute.sc/space/oslashacute.sc/space/sacute.sc/space/nacute.sc/space/yacute.sc/space/wacute.sc \012/tildecomb/space/atilde.sc/space/etilde.sc/space/ntilde.sc/space/otilde.sc/space/ytilde.sc/space/itilde.sc/space/utilde.sc \012/dieresiscomb/space/adieresis.sc/space/odieresis.sc/space/edieresis.sc/space/wdieresis.sc/space/ydieresis.sc/space/udieresis.sc/space/idieresis.sc \012/hungarumlautcomb/space/ohungarumlaut.sc/space/uhungarumlaut.sc \012/circumflexcomb/space/acircumflex.sc/space/ecircumflex.sc/space/ccircumflex.sc/space/gcircumflex.sc/space/jcircumflex.sc/space/ocircumflex.sc/space/ucircumflex.sc/space/hcircumflex.sc/space/icircumflex.sc/space/wcircumflex.sc/space/scircumflex.sc/space/ycircumflex.sc/space \012/caroncomb/space/ccaron.sc/space/dcaron.sc/space/ecaron.sc/space/gcaron.sc/space/jcaron.sc/space/ncaron.sc/space/tcaron.sc/space/zcaron.sc/space/rcaron.sc/space/scaron.sc \012/brevecomb/space/abreve.sc/space/ebreve.sc/space/obreve.sc/space/ibreve.sc/space/gbreve.sc/space/ubreve.sc \012/ringcomb/space/aring.sc/space/uring.sc/space/aringacute.sc \012/macroncomb/space/amacron.sc/space/omacron.sc/space/umacron.sc/space/ymacron.sc/space/emacron.sc/space/imacron.sc \012/dotbelowcomb/space/adotbelow.sc/space/edotbelow.sc/space/odotbelow.sc/space/idotbelow.sc/space/udotbelow.sc \012/commaaccentcomb/space/kcommaaccent.sc/space/lcommaaccent.sc/space/ncommaaccent.sc/space/gcommaaccent.sc/space/rcommaaccent.sc/space/scommaaccent.sc/space/tcommaaccent.sc \012/cedillacomb/space/ccedilla.sc/space/tcedilla.sc/space/scedilla.sc/space \012/ogonekcomb/space/aogonek.sc/space/eogonek.sc/space/iogonek.sc/space/uogonek.sc \012\012/idotless.sc/space/iacute.sc/space/ibreve.sc/space/icircumflex.sc/space/idieresis.sc/space/idotaccent.sc/space/idotbelow.sc/space/igrave.sc/space/imacron.sc/space/iogonek.sc/space/itilde.sc",
+"i/space/idotless/space j/space/jdotless \012/i.sc/space/idotless.sc/space/j.sc/space",
+"/dieresiscomb/dotaccentcomb/gravecomb/acutecomb/hungarumlautcomb/circumflexcomb/caroncomb/brevecomb/ringcomb/tildecomb/macroncomb/dotbelowcomb/commaaccentcomb/cedillacomb/ogonekcomb \012new/space/hookabovecomb/horncomb/ringbelowcomb/tildebelowcomb/brevebelowcomb",
+"/dottedCircle"
 );
 classes = (
 {
@@ -55,6 +58,14 @@ name = localizedDesigner;
 value = "Dutch;Daan Jobsis";
 },
 {
+name = license;
+value = "This Font Software is licensed under the SIL Open Font License, Version 1.1.\012This license is available with a FAQ at: openfontlicense.org";
+},
+{
+name = licenseURL;
+value = "https://openfontlicense.org";
+},
+{
 name = sampleText;
 value = "Amazingly few discotheques provide jukeboxes!";
 },
@@ -72,7 +83,7 @@ Tag = wght;
 );
 }
 );
-date = "2026-02-02 14:54:18 +0000";
+date = "2026-02-02 18:10:01 +0000";
 designerURL = "http://www.daanjobsis.nl";
 disablesAutomaticAlignment = 1;
 familyName = "Agrave Pro";
@@ -90,8 +101,7 @@ code = "feature locl;\012feature subs;\012feature sinf;\012feature sups;\012feat
 name = aalt;
 },
 {
-automatic = 1;
-code = "lookup ccmp_DFLT_1 {\012	@CombiningTopAccents = [acutecomb brevecomb caroncomb circumflexcomb dieresiscomb dotaccentcomb gravecomb hungarumlautcomb macroncomb ringcomb tildecomb];\012	lookupflag UseMarkFilteringSet @CombiningTopAccents;\012	sub i' @CombiningTopAccents by idotless;\012	sub j' @CombiningTopAccents by jdotless;\012} ccmp_DFLT_1;\012\012lookup ccmp_latn_1 {\012	lookupflag 0;\012	sub fi by f i;\012	sub fl by f l;\012} ccmp_latn_1;\012\012script latn;\012lookup ccmp_latn_1;\012";
+code = "lookup ccmp_DFLT_1 {\012@CombiningTopAccents = [\012  acutecomb gravecomb circumflexcomb tildecomb macroncomb brevecomb caroncomb\012  dieresiscomb dotaccentcomb ringcomb hungarumlautcomb\012  hookabovecomb horncomb\012];\012\012@CombiningBelowAccents = [\012  dotbelowcomb commaaccentcomb cedillacomb ogonekcomb\012  brevebelowcomb ringbelowcomb tildebelowcomb\012];\012\012@CombiningAccents = [@CombiningTopAccents @CombiningBelowAccents];\012\012lookupflag UseMarkFilteringSet @CombiningAccents;\012sub i' @CombiningAccents by idotless;\012sub j' @CombiningAccents by jdotless;\012} ccmp_DFLT_1;\012\012lookup ccmp_latn_1 {\012	lookupflag 0;\012	sub fi by f i;\012	sub fl by f l;\012} ccmp_latn_1;\012\012script latn;\012lookup ccmp_latn_1;\012lookup ccmp_DFLT_1;\012";
 name = ccmp;
 },
 {
@@ -88386,17 +88396,21 @@ unicode = 21E7;
 },
 {
 glyphname = dottedCircle;
-lastChange = "2026-01-18 11:03:29 +0000";
+lastChange = "2026-02-02 19:13:44 +0000";
 layers = (
 {
 anchors = (
 {
 name = bottom;
-position = "{266, -7}";
+position = "{266, -64}";
 },
 {
 name = top;
 position = "{260, 535}";
+},
+{
+name = topright;
+position = "{501, 443}";
 }
 );
 annotations = (
@@ -88524,11 +88538,15 @@ width = 532;
 anchors = (
 {
 name = bottom;
-position = "{266, -7}";
+position = "{266, -53}";
 },
 {
 name = top;
 position = "{260, 535}";
+},
+{
+name = topright;
+position = "{501, 443}";
 }
 );
 layerId = "7911D52E-6854-4A1B-8A16-F908BFF91E8F";
@@ -89356,7 +89374,7 @@ unicode = 0306;
 },
 {
 glyphname = ringcomb;
-lastChange = "2026-01-28 13:53:40 +0000";
+lastChange = "2026-02-02 18:25:19 +0000";
 layers = (
 {
 anchors = (
@@ -89433,18 +89451,18 @@ nodes = (
 {
 closed = 1;
 nodes = (
-"106 639 OFFCURVE",
+"109 638 OFFCURVE",
 "99 648 OFFCURVE",
 "99 662 CURVE SMOOTH",
-"99 678 OFFCURVE",
-"109 691 OFFCURVE",
-"127 690 CURVE SMOOTH",
-"147 690 OFFCURVE",
-"154 681 OFFCURVE",
+"99 679 OFFCURVE",
+"112 691 OFFCURVE",
+"127 691 CURVE SMOOTH",
+"143 691 OFFCURVE",
+"154 679 OFFCURVE",
 "153 664 CURVE SMOOTH",
-"153 647 OFFCURVE",
-"141 637 OFFCURVE",
-"122 638 CURVE SMOOTH"
+"152 646 OFFCURVE",
+"142 636 OFFCURVE",
+"122 637 CURVE SMOOTH"
 );
 }
 );
@@ -89608,6 +89626,148 @@ width = 293;
 unicode = 0304;
 },
 {
+glyphname = hookabovecomb;
+lastChange = "2026-02-02 18:58:35 +0000";
+layers = (
+{
+anchors = (
+{
+name = _top;
+position = "{107, 500}";
+}
+);
+layerId = "4692E1D1-BCA0-47EF-98E6-2E6F4483D11B";
+paths = (
+{
+closed = 1;
+nodes = (
+"22 739 OFFCURVE",
+"37 708 OFFCURVE",
+"62 716 CURVE SMOOTH",
+"103 729 OFFCURVE",
+"128 738 OFFCURVE",
+"139 697 CURVE SMOOTH",
+"145 673 OFFCURVE",
+"130 644 OFFCURVE",
+"95 623 CURVE SMOOTH",
+"68 607 OFFCURVE",
+"90 575 OFFCURVE",
+"117 591 CURVE SMOOTH",
+"152 611 OFFCURVE",
+"189 655 OFFCURVE",
+"175 709 CURVE SMOOTH",
+"156 782 OFFCURVE",
+"100 771 OFFCURVE",
+"48 750 CURVE SMOOTH"
+);
+}
+);
+width = 212;
+},
+{
+anchors = (
+{
+name = _top;
+position = "{126, 500}";
+}
+);
+layerId = "7911D52E-6854-4A1B-8A16-F908BFF91E8F";
+paths = (
+{
+closed = 1;
+nodes = (
+"13 752 OFFCURVE",
+"35 684 OFFCURVE",
+"81 700 CURVE SMOOTH",
+"118 713 OFFCURVE",
+"134 719 OFFCURVE",
+"143 693 CURVE SMOOTH",
+"149 676 OFFCURVE",
+"136 655 OFFCURVE",
+"101 631 CURVE SMOOTH",
+"64 605 OFFCURVE",
+"96 550 OFFCURVE",
+"141 572 CURVE SMOOTH",
+"182 592 OFFCURVE",
+"230 647 OFFCURVE",
+"212 716 CURVE SMOOTH",
+"190 801 OFFCURVE",
+"122 787 OFFCURVE",
+"63 768 CURVE SMOOTH"
+);
+}
+);
+width = 250;
+}
+);
+unicode = 0309;
+},
+{
+glyphname = horncomb;
+lastChange = "2026-02-02 19:14:13 +0000";
+layers = (
+{
+anchors = (
+{
+name = _topright;
+position = "{59, 468}";
+}
+);
+layerId = "4692E1D1-BCA0-47EF-98E6-2E6F4483D11B";
+paths = (
+{
+closed = 1;
+nodes = (
+"197 446 OFFCURVE",
+"203 555 OFFCURVE",
+"178 650 CURVE SMOOTH",
+"170 681 OFFCURVE",
+"130 671 OFFCURVE",
+"137 643 CURVE SMOOTH",
+"161 552 OFFCURVE",
+"150 484 OFFCURVE",
+"58 487 CURVE SMOOTH",
+"27 488 OFFCURVE",
+"25 448 OFFCURVE",
+"59 448 CURVE SMOOTH"
+);
+}
+);
+width = 223;
+},
+{
+anchors = (
+{
+name = _topright;
+position = "{75, 466}";
+}
+);
+layerId = "7911D52E-6854-4A1B-8A16-F908BFF91E8F";
+paths = (
+{
+closed = 1;
+nodes = (
+"221 431 OFFCURVE",
+"240 541 OFFCURVE",
+"211 652 CURVE SMOOTH",
+"196 709 OFFCURVE",
+"123 696 OFFCURVE",
+"135 639 CURVE SMOOTH",
+"152 561 OFFCURVE",
+"156 501 OFFCURVE",
+"74 503 CURVE SMOOTH",
+"22 504 OFFCURVE",
+"18 431 OFFCURVE",
+"75 431 CURVE SMOOTH"
+);
+}
+);
+width = 257;
+}
+);
+unicode = 031B;
+},
+{
 glyphname = dotbelowcomb;
 lastChange = "2026-01-28 13:53:05 +0000";
 layers = (
@@ -89659,6 +89819,105 @@ width = 162;
 }
 );
 unicode = 0323;
+},
+{
+glyphname = ringbelowcomb;
+lastChange = "2026-02-02 18:39:21 +0000";
+layers = (
+{
+anchors = (
+{
+name = _bottom;
+position = "{115, 0}";
+}
+);
+layerId = "4692E1D1-BCA0-47EF-98E6-2E6F4483D11B";
+paths = (
+{
+closed = 1;
+nodes = (
+"159 -235 OFFCURVE",
+"195 -204 OFFCURVE",
+"198 -157 CURVE SMOOTH",
+"199 -126 OFFCURVE",
+"184 -77 OFFCURVE",
+"116 -75 CURVE SMOOTH",
+"62 -74 OFFCURVE",
+"34 -116 OFFCURVE",
+"34 -157 CURVE SMOOTH",
+"34 -195 OFFCURVE",
+"58 -232 OFFCURVE",
+"111 -234 CURVE SMOOTH"
+);
+},
+{
+closed = 1;
+nodes = (
+"84 -197 OFFCURVE",
+"72 -177 OFFCURVE",
+"72 -157 CURVE SMOOTH",
+"72 -133 OFFCURVE",
+"88 -111 OFFCURVE",
+"117 -111 CURVE SMOOTH",
+"146 -112 OFFCURVE",
+"160 -132 OFFCURVE",
+"160 -155 CURVE SMOOTH",
+"158 -182 OFFCURVE",
+"139 -200 OFFCURVE",
+"112 -198 CURVE SMOOTH"
+);
+}
+);
+width = 232;
+},
+{
+anchors = (
+{
+name = _bottom;
+position = "{139, 0}";
+}
+);
+layerId = "7911D52E-6854-4A1B-8A16-F908BFF91E8F";
+paths = (
+{
+closed = 1;
+nodes = (
+"192 -256 OFFCURVE",
+"238 -216 OFFCURVE",
+"242 -157 CURVE SMOOTH",
+"243 -117 OFFCURVE",
+"224 -54 OFFCURVE",
+"138 -53 CURVE SMOOTH",
+"70 -52 OFFCURVE",
+"34 -105 OFFCURVE",
+"34 -157 CURVE SMOOTH",
+"34 -205 OFFCURVE",
+"66 -252 OFFCURVE",
+"132 -254 CURVE SMOOTH"
+);
+},
+{
+closed = 1;
+nodes = (
+"108 -194 OFFCURVE",
+"98 -177 OFFCURVE",
+"98 -157 CURVE SMOOTH",
+"98 -135 OFFCURVE",
+"112 -114 OFFCURVE",
+"140 -114 CURVE SMOOTH",
+"166 -114 OFFCURVE",
+"180 -134 OFFCURVE",
+"180 -155 CURVE SMOOTH",
+"180 -183 OFFCURVE",
+"158 -196 OFFCURVE",
+"135 -195 CURVE SMOOTH"
+);
+}
+);
+width = 276;
+}
+);
+unicode = 0325;
 },
 {
 glyphname = commaaccentcomb;
@@ -89902,6 +90161,172 @@ width = 258;
 }
 );
 unicode = 0328;
+},
+{
+glyphname = brevebelowcomb;
+lastChange = "2026-02-02 18:41:39 +0000";
+layers = (
+{
+anchors = (
+{
+name = _bottom;
+position = "{131, 0}";
+}
+);
+layerId = "4692E1D1-BCA0-47EF-98E6-2E6F4483D11B";
+paths = (
+{
+closed = 1;
+nodes = (
+"217 -194 OFFCURVE",
+"230 -124 OFFCURVE",
+"229 -102 CURVE SMOOTH",
+"229 -76 OFFCURVE",
+"194 -74 OFFCURVE",
+"192 -103 CURVE SMOOTH",
+"190 -125 OFFCURVE",
+"179 -160 OFFCURVE",
+"137 -161 CURVE SMOOTH",
+"83 -162 OFFCURVE",
+"73 -125 OFFCURVE",
+"72 -99 CURVE SMOOTH",
+"70 -71 OFFCURVE",
+"32 -71 OFFCURVE",
+"34 -101 CURVE SMOOTH",
+"35 -129 OFFCURVE",
+"48 -199 OFFCURVE",
+"141 -196 CURVE SMOOTH"
+);
+}
+);
+width = 263;
+},
+{
+anchors = (
+{
+name = _bottom;
+position = "{148, 0}";
+}
+);
+layerId = "7911D52E-6854-4A1B-8A16-F908BFF91E8F";
+paths = (
+{
+closed = 1;
+nodes = (
+"240 -209 OFFCURVE",
+"258 -138 OFFCURVE",
+"260 -114 CURVE SMOOTH",
+"264 -64 OFFCURVE",
+"196 -57 OFFCURVE",
+"189 -108 CURVE SMOOTH",
+"186 -131 OFFCURVE",
+"169 -146 OFFCURVE",
+"151 -146 CURVE SMOOTH",
+"122 -147 OFFCURVE",
+"107 -130 OFFCURVE",
+"106 -104 CURVE SMOOTH",
+"103 -53 OFFCURVE",
+"31 -58 OFFCURVE",
+"34 -112 CURVE SMOOTH",
+"36 -138 OFFCURVE",
+"53 -212 OFFCURVE",
+"155 -210 CURVE SMOOTH"
+);
+}
+);
+width = 294;
+}
+);
+unicode = 032E;
+},
+{
+glyphname = tildebelowcomb;
+lastChange = "2026-02-02 18:39:50 +0000";
+layers = (
+{
+anchors = (
+{
+name = _bottom;
+position = "{154, 0}";
+}
+);
+layerId = "4692E1D1-BCA0-47EF-98E6-2E6F4483D11B";
+paths = (
+{
+closed = 1;
+nodes = (
+"47 -82 OFFCURVE",
+"33 -124 OFFCURVE",
+"34 -150 CURVE SMOOTH",
+"35 -178 OFFCURVE",
+"72 -177 OFFCURVE",
+"73 -151 CURVE SMOOTH",
+"74 -128 OFFCURVE",
+"86 -117 OFFCURVE",
+"109 -118 CURVE SMOOTH",
+"139 -119 OFFCURVE",
+"143 -169 OFFCURVE",
+"199 -169 CURVE SMOOTH",
+"252 -169 OFFCURVE",
+"274 -128 OFFCURVE",
+"274 -101 CURVE SMOOTH",
+"274 -71 OFFCURVE",
+"235 -73 OFFCURVE",
+"235 -100 CURVE SMOOTH",
+"235 -117 OFFCURVE",
+"223 -133 OFFCURVE",
+"200 -133 CURVE SMOOTH",
+"166 -133 OFFCURVE",
+"164 -82 OFFCURVE",
+"109 -82 CURVE SMOOTH"
+);
+}
+);
+width = 308;
+},
+{
+anchors = (
+{
+name = _bottom;
+position = "{186, 0}";
+}
+);
+layerId = "7911D52E-6854-4A1B-8A16-F908BFF91E8F";
+paths = (
+{
+closed = 1;
+nodes = (
+"51 -67 OFFCURVE",
+"34 -129 OFFCURVE",
+"34 -156 CURVE SMOOTH",
+"34 -204 OFFCURVE",
+"102 -204 OFFCURVE",
+"105 -161 CURVE SMOOTH",
+"106 -144 OFFCURVE",
+"118 -131 OFFCURVE",
+"131 -131 CURVE SMOOTH",
+"178 -131 OFFCURVE",
+"171 -192 OFFCURVE",
+"242 -192 CURVE SMOOTH",
+"316 -192 OFFCURVE",
+"337 -122 OFFCURVE",
+"337 -94 CURVE SMOOTH",
+"337 -48 OFFCURVE",
+"271 -47 OFFCURVE",
+"268 -91 CURVE SMOOTH",
+"267 -107 OFFCURVE",
+"258 -128 OFFCURVE",
+"238 -128 CURVE SMOOTH",
+"201 -128 OFFCURVE",
+"196 -67 OFFCURVE",
+"131 -67 CURVE SMOOTH"
+);
+}
+);
+width = 371;
+}
+);
+unicode = 0330;
 },
 {
 glyphname = dieresis;
@@ -106408,5 +106833,5 @@ GSDimensionPlugin.Dimensions = {
 };
 };
 versionMajor = 1;
-versionMinor = 6;
+versionMinor = 7;
 }
