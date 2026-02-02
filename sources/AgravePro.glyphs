@@ -14,7 +14,7 @@ code = "A Aacute Abreve Acircumflex Adieresis Adotbelow Agrave Amacron Aogonek A
 name = Uppercase;
 }
 );
-copyright = "Copyright 2026 The Agràve Pro Project Authors (https://github.com/daanjobsis/font)";
+copyright = "Copyright 2026 The Agràve Pro Project Authors (https://github.com/daanjobsis/agrave-pro)";
 customParameters = (
 {
 name = "Use Typo Metrics";
@@ -72,7 +72,7 @@ Tag = wght;
 );
 }
 );
-date = "2026-02-01 17:35:11 +0000";
+date = "2026-02-02 14:54:18 +0000";
 designerURL = "http://www.daanjobsis.nl";
 disablesAutomaticAlignment = 1;
 familyName = "Agrave Pro";
@@ -106407,5 +106407,5 @@ GSDimensionPlugin.Dimensions = {
 };
 };
 versionMajor = 1;
-versionMinor = 5;
+versionMinor = 6;
 }
