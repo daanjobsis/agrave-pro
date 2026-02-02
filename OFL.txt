@@ -1,8 +1,5 @@
 Copyright 2026 The Agràve Pro Project Authors (https://github.com/daanjobsis/agrave-pro)
 
-
-Copyright 20** The My Font Project Authors (https://github.com/googlefonts/googlefonts-project-template)
-
 This Font Software is licensed under the SIL Open Font License, Version 1.1.
 This license is copied below, and is also available with a FAQ at:
 https://openfontlicense.org
