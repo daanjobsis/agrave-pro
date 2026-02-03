@@ -9,7 +9,8 @@ DisplayStrings = (
 "i/space/idotless/space j/space/jdotless \012/i.sc/space/idotless.sc/space/j.sc/space",
 "/dieresiscomb/dotaccentcomb/gravecomb/acutecomb/hungarumlautcomb/circumflexcomb/caroncomb/brevecomb/ringcomb/tildecomb/macroncomb/dotbelowcomb/commaaccentcomb/cedillacomb/ogonekcomb \012new/space/hookabovecomb/horncomb/ringbelowcomb/tildebelowcomb/brevebelowcomb",
 "/dottedCircle",
-"/superscripti/space/superscripti.dotless/space/iogonek.dotless/space/idotbelow.dotless/idotless/space/idotless/space/iogonek/space/idotbelow"
+"/superscripti/space/superscripti.dotless/space/iogonek.dotless/space/idotbelow.dotless/idotless/space/idotless/space/iogonek/space/idotbelow",
+"/clubsuitblack/downArrow/upArrow/diamond/heartsuitblack/upDownArrow"
 );
 classes = (
 {
@@ -71,7 +72,7 @@ name = sampleText;
 value = "Amazingly few discotheques provide jukeboxes!";
 },
 {
-name = uniqueID;
+name = vendorID;
 value = DUST;
 },
 {
@@ -84,7 +85,7 @@ Tag = wght;
 );
 }
 );
-date = "2026-02-02 18:10:01 +0000";
+date = "2026-02-02 20:14:33 +0000";
 designerURL = "http://www.daanjobsis.nl";
 disablesAutomaticAlignment = 1;
 familyName = "Agrave Pro";
@@ -5102,9 +5103,15 @@ unicode = 00CB;
 },
 {
 glyphname = Edotaccent;
-lastChange = "2019-01-09 18:31:01 +0000";
+lastChange = "2026-02-03 06:29:42 +0000";
 layers = (
 {
+anchors = (
+{
+name = top;
+position = "{280, 934}";
+}
+);
 layerId = "4692E1D1-BCA0-47EF-98E6-2E6F4483D11B";
 paths = (
 {
@@ -5166,6 +5173,12 @@ nodes = (
 width = 542;
 },
 {
+anchors = (
+{
+name = top;
+position = "{305, 958}";
+}
+);
 layerId = "7911D52E-6854-4A1B-8A16-F908BFF91E8F";
 paths = (
 {
@@ -20867,7 +20880,7 @@ rightKerningGroup = J;
 },
 {
 glyphname = T_h.liga;
-lastChange = "2026-01-15 15:47:48 +0000";
+lastChange = "2026-02-03 06:38:22 +0000";
 layers = (
 {
 anchors = (
@@ -20887,12 +20900,10 @@ nodes = (
 "548.602 719.264 OFFCURVE",
 "469.743 712.345 OFFCURVE",
 "382.717 709.19 CURVE",
-"383.688 741.262 LINE",
-"383.998 751.864 LINE",
-"383.971 786.242 OFFCURVE",
-"338.02 783.729 OFFCURVE",
-"340.024 751.699 CURVE",
-"339.479 732.842 LINE",
+"383.998 751.864 LINE SMOOTH",
+"385 786 OFFCURVE",
+"341 784 OFFCURVE",
+"340.024 751.699 CURVE SMOOTH",
 "338.686 708.086 LINE",
 "243.699 706.374 OFFCURVE",
 "154.569 704.864 OFFCURVE",
@@ -20979,12 +20990,10 @@ nodes = (
 "554.674 718.653 OFFCURVE",
 "493.496 712.965 OFFCURVE",
 "423.219 709.859 CURVE",
-"423.546 720.657 LINE",
-"423.865 731.88 LINE",
-"423.819 790.26 OFFCURVE",
-"345.453 789.139 OFFCURVE",
-"340.106 739.412 CURVE",
-"339.354 713.42 LINE",
+"423.865 731.88 LINE SMOOTH",
+"426 790 OFFCURVE",
+"342 789 OFFCURVE",
+"340.106 739.412 CURVE SMOOTH",
 "339.172 707.745 LINE",
 "251.382 706.224 OFFCURVE",
 "168.887 705.576 OFFCURVE",
@@ -26250,9 +26259,15 @@ unicode = 00EB;
 },
 {
 glyphname = edotaccent;
-lastChange = "2018-11-10 08:12:29 +0000";
+lastChange = "2026-02-03 06:29:33 +0000";
 layers = (
 {
+anchors = (
+{
+name = top;
+position = "{257, 638}";
+}
+);
 layerId = "4692E1D1-BCA0-47EF-98E6-2E6F4483D11B";
 paths = (
 {
@@ -26319,6 +26334,12 @@ nodes = (
 width = 480;
 },
 {
+anchors = (
+{
+name = top;
+position = "{273, 658}";
+}
+);
 layerId = "7911D52E-6854-4A1B-8A16-F908BFF91E8F";
 paths = (
 {
