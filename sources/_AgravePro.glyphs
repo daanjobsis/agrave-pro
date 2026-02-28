@@ -10,8 +10,7 @@ DisplayStrings = (
 "/dieresiscomb/dotaccentcomb/gravecomb/acutecomb/hungarumlautcomb/circumflexcomb/caroncomb/brevecomb/ringcomb/tildecomb/macroncomb/dotbelowcomb/commaaccentcomb/cedillacomb/ogonekcomb \012new/space/hookabovecomb/horncomb/ringbelowcomb/tildebelowcomb/brevebelowcomb",
 "/dottedCircle",
 "/superscripti/space/superscripti.dotless/space/iogonek.dotless/space/idotbelow.dotless/idotless/space/idotless/space/iogonek/space/idotbelow",
-".sc\012/fi.sc/l.sc/t.sc/e.sc/r.sc \012/p.sc/r.sc/e.sc/s.sc/e.sc/t.sc/space ME/m.sc/e.sc/t.sc/r.sc/i.sc/c.sc/s.sc \012/o.sc/n.sc/l.sc/y.sc/space LY/c.sc/c_t.sc/t.sc/space/s.sc/s_t.sc/t.sc",
-"/i.sc/tildecomb/itilde.sc"
+".sc\012/fi.sc/l.sc/t.sc/e.sc/r.sc/s.sc \012/p.sc/r.sc/e.sc/s.sc/e.sc/t.sc/space ME/m.sc/e.sc/t.sc/r.sc/i.sc/c.sc/s.sc \012/o.sc/n.sc/l.sc/y.sc/space LY/c.sc/c_t.sc/t.sc/space/s.sc/s_t.sc/t.sc"
 );
 classes = (
 {
@@ -57,6 +56,10 @@ name = localizedManufacturer;
 value = "Dustbunnies Everywhere";
 },
 {
+name = localizedDesigner;
+value = "Dutch;Daan Jobsis";
+},
+{
 name = license;
 value = "This Font Software is licensed under the SIL Open Font License, Version 1.1.\012This license is available with a FAQ at: openfontlicense.org";
 },
@@ -83,7 +86,6 @@ Tag = wght;
 }
 );
 date = "2026-02-02 20:14:33 +0000";
-designer = "Daan Jobsis";
 designerURL = "http://www.daanjobsis.nl";
 disablesAutomaticAlignment = 1;
 familyName = "Agrave Pro";
@@ -50921,7 +50923,7 @@ rightKerningGroup = H;
 },
 {
 glyphname = i.sc;
-lastChange = "2026-02-28 14:41:52 +0000";
+lastChange = "2026-01-28 14:38:01 +0000";
 layers = (
 {
 layerId = "4692E1D1-BCA0-47EF-98E6-2E6F4483D11B";
@@ -50944,7 +50946,7 @@ nodes = (
 "209 560 OFFCURVE",
 "184 559 CURVE SMOOTH",
 "150 558 OFFCURVE",
-"102 559 OFFCURVE",
+"102 560 OFFCURVE",
 "58 561 CURVE SMOOTH",
 "28 562 OFFCURVE",
 "26 525 OFFCURVE",
@@ -51369,8 +51371,21 @@ rightKerningGroup = I;
 },
 {
 glyphname = itilde.sc;
-lastChange = "2026-02-28 14:49:16 +0000";
+lastChange = "2026-01-28 14:41:09 +0000";
 layers = (
+{
+components = (
+{
+name = i.sc;
+},
+{
+name = tildecomb;
+transform = "{0.99939, -0.0349, 0.0349, 0.99939, -53, 34}";
+}
+);
+layerId = "4692E1D1-BCA0-47EF-98E6-2E6F4483D11B";
+width = 238;
+},
 {
 components = (
 {
@@ -51379,25 +51394,11 @@ transform = "{1, 0, 0, 1, 1, 0}";
 },
 {
 name = tildecomb;
-transform = "{0.99939, -0.0349, 0.0349, 0.99939, -52, 34}";
-}
-);
-layerId = "4692E1D1-BCA0-47EF-98E6-2E6F4483D11B";
-width = 240;
-},
-{
-components = (
-{
-name = i.sc;
-transform = "{1, 0, 0, 1, 12, 0}";
-},
-{
-name = tildecomb;
-transform = "{0.99939, -0.0349, 0.0349, 0.99939, -52, 47}";
+transform = "{-0.99939, 0.0349, -0.0349, -0.99939, 344, 1342}";
 }
 );
 layerId = "7911D52E-6854-4A1B-8A16-F908BFF91E8F";
-width = 303;
+width = 281;
 }
 );
 leftKerningGroup = I;
@@ -89606,7 +89607,7 @@ unicode = 030A;
 },
 {
 glyphname = tildecomb;
-lastChange = "2026-02-28 14:48:35 +0000";
+lastChange = "2026-01-28 13:45:47 +0000";
 layers = (
 {
 anchors = (
@@ -89636,9 +89637,9 @@ nodes = (
 "37 663 OFFCURVE",
 "34 633 CURVE SMOOTH",
 "31 605 OFFCURVE",
-"68 604 OFFCURVE",
-"73 628 CURVE SMOOTH",
-"77 647 OFFCURVE",
+"71 604 OFFCURVE",
+"76 628 CURVE SMOOTH",
+"80 647 OFFCURVE",
 "88 665 OFFCURVE",
 "104 665 CURVE SMOOTH",
 "140 664 OFFCURVE",
@@ -89668,21 +89669,21 @@ nodes = (
 "265 735 OFFCURVE",
 "255 686 CURVE SMOOTH",
 "250 667 OFFCURVE",
-"245 654 OFFCURVE",
-"225 655 CURVE SMOOTH",
-"198 656 OFFCURVE",
-"197 717 OFFCURVE",
+"247 652 OFFCURVE",
+"227 653 CURVE SMOOTH",
+"211 654 OFFCURVE",
+"193 717 OFFCURVE",
 "134 719 CURVE SMOOTH",
 "65 721 OFFCURVE",
 "39 666 OFFCURVE",
 "35 637 CURVE SMOOTH",
 "26 584 OFFCURVE",
-"98 576 OFFCURVE",
+"97 576 OFFCURVE",
 "108 623 CURVE SMOOTH",
-"112 641 OFFCURVE",
-"123 653 OFFCURVE",
-"136 652 CURVE SMOOTH",
-"151 651 OFFCURVE",
+"112 642 OFFCURVE",
+"123 655 OFFCURVE",
+"136 654 CURVE SMOOTH",
+"155 652 OFFCURVE",
 "165 589 OFFCURVE",
 "231 589 CURVE SMOOTH"
 );
