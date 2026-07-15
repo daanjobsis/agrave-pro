@@ -91859,8 +91859,8 @@ weightClass = Light;
 {
 interpolationWeight = 400;
 instanceInterpolations = {
-"4692E1D1-BCA0-47EF-98E6-2E6F4483D11B" = 0.75;
-"7911D52E-6854-4A1B-8A16-F908BFF91E8F" = 0.25;
+"4692E1D1-BCA0-47EF-98E6-2E6F4483D11B" = 0.5;
+"7911D52E-6854-4A1B-8A16-F908BFF91E8F" = 0.5;
 };
 name = Regular;
 },
