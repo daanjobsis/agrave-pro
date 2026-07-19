@@ -1604,7 +1604,12 @@
       width: min(100%, 1340px);
       /* Shifts the Figures svg + its annotation lines/dots/labels left, without
          touching .figures-sec__bg (the matrix rain), which is a separate sibling. */
-      transform: translateX(-40px);
+      transform: translateX(-50px);
+    }
+    /* Large viewports keep the original -40px — the extra 10px left shift below
+       is medium/mobile only. */
+    @media (min-width: 1600px) {
+      .figures-sec__wrap { transform: translateX(-40px); }
     }
     .figures-sec__wrap svg {
       width: 100%;
@@ -1630,6 +1635,9 @@
     .figures-lbl--1 { left: calc(7.99% - 35px); top: 53.68%; transform: translateY(-50%); } /* Lining & Oldstyle — mid-left */
     .figures-lbl--2 { left: 14.6%; bottom: calc(0.61% - 10px); }                         /* With Numerators & Denominators — bottom-left */
     .figures-lbl--3 { right: 15.86%; top: calc(90% - 3px); text-align: right; }         /* With Superiors & Inferiors — bottom-right */
+    /* Mobile-only composite annotation + its connector graphic — hidden on desktop,
+       shown instead of the four individual annotations at the 640px breakpoint. */
+    .figures-lbl--summary { display: none; }
     @media (prefers-reduced-motion: reduce) {
       .figures-lbl,
       .figures-sec__wrap svg circle[stroke="#77A6C5"] { opacity: 1; }
@@ -1637,24 +1645,57 @@
       .figures-sec__bg path { opacity: 0.35; }
     }
     @media (max-width: 640px) {
-      .figures-sec { padding: 60px 24px; min-height: auto; }
-      .figures-sec__bg { height: 60%; }
-      .figures-sec__wrap {
-        display: flex;
+      /* Same treatment as Kerning/Ligatures/Legibility — hide all individual
+         annotations, zoom the artwork, and keep a single summary annotation
+         (here: a composite of all four Figures annotations) below it. */
+      /* Height matches Kerning's mobile floor (150vw) — gives the zoomed
+         artwork + kept line/dot room to sit centred without crowding the
+         next section, and lets the matrix rain show at a bigger scale. */
+      .figures-sec {
+        padding: 40px 0; overflow: visible; min-height: 150vw;
         flex-direction: column;
-        align-items: center;
         gap: 16px;
-        transform: none; /* keep centered on mobile, don't carry the desktop shift */
+      }
+      .figures-sec__bg { height: 80%; }
+      .figures-sec__wrap {
+        overflow: visible;
+        transform: translateX(-10px); /* centered on mobile (no desktop -50px carried over), shifted 10px left */
       }
       /* Spatial arrows don't work once labels stack — keep the ruled lines + headline art, hide the pointers */
       .figures-sec__wrap svg circle[stroke="#77A6C5"],
       .figures-sec__wrap svg path[stroke="#77A6C5"],
       .figures-sec__wrap svg g[clip-path] { display: none; }
-      .figures-lbl {
+      /* Same as Ligatures/Kerning — keep just the "With Superiors & Inferiors"
+         line + dot visible; being part of this svg, it scales with the 1.9×
+         zoom below at the exact same percentage as the rest of the artwork.
+         Shifted so the dot lands centred under the "u" in "Figures". */
+      #figures-keep-path, #figures-keep-dot {
+        display: inline;
+        transform: translate(-365px, 85px);
+      }
+      /* 1.9× zoom on the headline numerals + ruled baselines, centred on their
+         bounding box (x 277–1301, y 263–541 in the 1483×733 viewBox). */
+      .figures-sec__wrap svg {
+        transform: scale(1.9);
+        transform-origin: 53.2% 54.8%;
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .figures-lbl:not(.figures-lbl--summary) { display: none; }
+      .figures-lbl--summary {
+        display: block;
         position: static;
+        /* vw-based, not a fixed px — the line above it lives inside the same
+           scale(1.9)'d svg as the rest of the artwork, so it grows with
+           viewport width; a fixed gap here closed up and started touching
+           the line's end on wider mobile viewports. */
+        margin-top: 18vw;
+        transform: translateX(-40px);
         font-size: clamp(12px, 4.18vw, 65px);
-        text-align: center !important;
-        right: auto; left: auto; top: auto; bottom: auto; transform: none;
+        text-align: center;
+        /* opacity starts at 0 via the shared .figures-lbl rule and is faded
+           in by the scroll JS after the dot + line, same as every other
+           label — prefers-reduced-motion still forces it to 1 (that rule is
+           declared after the base one, so it wins there). */
       }
     }
 
@@ -1688,15 +1729,33 @@
        that turned out to just be the circle shape itself repeated, i.e.
        exactly what overflow:hidden already gives us here for free. */
     .fig-ex__nums-row {
-      position: absolute; left: 50%; transform: translateX(-50%);
+      position: absolute; left: 50%; transform: translateX(calc(-50% - 25px));
       font-family: 'Agrave Pro', Arial, sans-serif; font-weight: 300;
       font-size: 8.889cqh; line-height: 2.0; color: #CDDFEA; white-space: nowrap;
     }
     .fig-ex__nums-row b { font-weight: 400; color: #286F9B; }
+    /* Highlighted rows (the two callouts) sit 90px right of centre at their
+       original, unshifted baseline — kept 30px right of the rest of the rows
+       (which sit 15px left) so both track the same relative gap at every
+       breakpoint below. */
+    .fig-ex__nums-row[data-highlight="lining-proportional"],
+    .fig-ex__nums-row[data-highlight="lining-tabular"] {
+      transform: translateX(calc(-50% + 80px));
+    }
+    /* Large viewports (canvas at its 1600px cap): nudge every row 15px right */
+    @media (min-width: 1600px) {
+      .fig-ex__nums-row { transform: translateX(calc(-50% - 5px)); }
+      .fig-ex__nums-row[data-highlight="lining-proportional"],
+      .fig-ex__nums-row[data-highlight="lining-tabular"] {
+        transform: translateX(calc(-50% + 100px));
+      }
+    }
 
     .fig-ex__lbl {
       position: absolute; font-family: 'Agrave Pro', Arial, sans-serif; font-weight: 700;
-      font-size: clamp(13px, 1.667vw, 32px); color: #84948B; white-space: nowrap; opacity: 0;
+      /* Matches .acc__ann-text ("Individual glyph shapes") exactly, so this
+         label reads at the same scale at every non-mobile width too. */
+      font-size: clamp(8px, 2.2vw, 34px); color: #84948B; white-space: nowrap; opacity: 0;
     }
     .fig-ex__lbl--tabular  { left: 8.594%;  top: 28.785%; }
     .fig-ex__lbl--oldstyle { left: 52.760%; top: calc(6.575% - 10px); }
@@ -1717,15 +1776,102 @@
 
     .fig-ex__arrow { position: absolute; }
     .fig-ex__arrow svg { display: block; width: 100%; height: auto; }
-    .fig-ex__arrow--tabular  { left: 10.725%; top: 25.030%; width: 3.558%; }
-    .fig-ex__arrow--oldstyle { left: calc(55.996% - 60px); top: calc(12.301% - 50px); width: 4.495%; }
-    .fig-ex__arrow--lining   { left: 11.330%; top: calc(9.128% - 50px);  width: 3.888%; }
-    .fig-ex__arrow--opentype { left: calc(88.077% - 63px); top: calc(47.779% + 12px); width: 5.972%; }
+    .fig-ex__arrow--tabular  { left: 10.725%; top: calc(25.030% - 10px); width: calc(clamp(30px, 3.2vw, 45px) * 1.533); }
+    .fig-ex__arrow--oldstyle { left: calc(55.996% - 40px); top: calc(12.301% - 30px); width: calc(clamp(30px, 3.2vw, 45px) * 1.933); }
+    .fig-ex__arrow--lining   { left: 11.330%; top: calc(9.128% - 45px);  width: calc(clamp(30px, 3.2vw, 45px) * 1.667); }
+    .fig-ex__arrow--opentype { left: calc(88.077% - 63px); top: calc(47.779% - 18px); width: calc(clamp(30px, 3.2vw, 45px) * 2.556); }
     .fig-ex__arrow path { stroke-linecap: round; }
+    /* Placed after the unconditional rule above (not in the earlier
+       min-width:1600px block) so it actually wins the cascade at 1600px+ —
+       same specificity, so source order decides. */
+    @media (min-width: 1600px) {
+      .fig-ex__arrow--opentype { top: calc(47.779% - 8px - 20px); }
+    }
 
     @media (max-width: 640px) {
-      .fig-ex-sec { padding: 48px 16px; }
-      .fig-ex-sec__canvas { aspect-ratio: auto; height: 480px; }
+      /* Extra top padding pushes this section's own (opaque, z-index:2) canvas
+         content further down, leaving more of the blank strip above it where
+         section 13's overflowing matrix rain (z-index:1) shows through unobstructed. */
+      .fig-ex-sec { padding: 200px 16px 48px; }
+      /* Circles scaled 150% below — height now tracks width via aspect-ratio
+         instead of a fixed px value, so the taller stacked cluster has room
+         without the circles' own %-of-width sizing getting out of sync with
+         their %-of-height top offsets. */
+      .fig-ex-sec__canvas { aspect-ratio: 50 / 137; height: auto; }
+      /* Was inheriting the desktop -30px shift, which reads completely
+         differently against the much smaller mobile circle — reset to the
+         original baseline, then apply a mobile-appropriate -10px shift. */
+      .fig-ex__nums-row { transform: translateX(calc(-50% - 10px)); }
+      .fig-ex__nums-row[data-highlight="lining-proportional"],
+      .fig-ex__nums-row[data-highlight="lining-tabular"] {
+        transform: translateX(calc(-50% + 95px));
+      }
+      /* First-pass mobile cluster — no mobile layout existed for these
+         circles before (they inherited the desktop %-positions verbatim
+         against a squashed canvas). Scaled up + regrouped so the 480px-tall
+         canvas reads as a full, intentional cluster instead of the sparse
+         desktop spread: chem + opentype (the two greens) pulled next to each
+         other near the top, emc2 (blue) tucked left-of-centre just below
+         them, and math (the largest, palest circle) anchored lower-right so
+         its bottom can bleed toward the book art in the next section. nums
+         (light blue) sits left-of-centre, vertically mid-canvas. */
+      /* Row order: nums (light blue) → chem + opentype (light/dark green,
+         side by side) → emc2 (dark blue, left of centre) → math (right of
+         centre, largest, bleeding toward the book below). */
+      .fig-ex__circle--nums     { left: 18.5%; top: 0%;    width: 63%; }
+      /* chem + emc2 scaled to 80% of their previous mobile size, shrunk
+         around their own centre (not their top-left corner) so they stay
+         put relative to the row instead of drifting. */
+      .fig-ex__circle--chem     { left: 6.2%;  top: 30%;   width: 33.6%; }
+      .fig-ex__circle--opentype { left: 50%;   top: 28.5%; width: 48%; }
+      .fig-ex__circle--emc2     { left: 23.9%; top: 49.2%; width: 31.2%; }
+      /* Same 80%-of-current-size, centre-preserving scale-down as chem/emc2. */
+      .fig-ex__circle--math     { left: 37.9%; top: 63.6%; width: 55.2%; }
+      /* chem/emc2/math text no longer tracks vw (viewport width) but the
+         circle's own size, via container queries — same technique already
+         used on the nums/opentype circles — so shrinking the circle above
+         shrinks its label at the same ratio the desktop vw-based clamp
+         keeps relative to that circle's own (much smaller) desktop width. */
+      .fig-ex__circle--chem, .fig-ex__circle--emc2, .fig-ex__circle--math { container-type: size; }
+      .fig-ex__chem { font-size: 24.2cqw; }
+      .fig-ex__emc2 { font-size: 30.9cqw; }
+      .fig-ex__math { font-size: 10.31cqw; }
+      /* Labels/arrows re-pointed at the numbers circle (tabular/oldstyle/
+         lining/opentype) — sized to match the "Individual glyph shapes"
+         annotation convention (.acc__ann-text / .acc__arrow). */
+      .fig-ex__lbl--tabular,
+      .fig-ex__lbl--oldstyle,
+      .fig-ex__lbl--lining,
+      .fig-ex__lbl--opentype { font-size: clamp(12px, 4.18vw, 65px); }
+      /* Each arrow's width scales its own viewBox by the same px-per-unit
+         ratio as .acc__arrow (viewBox 45×101, width clamp(30px,3.2vw,45px))
+         — matching only `width` previously rendered these ~2.5x smaller
+         than that reference, since these viewBoxes are landscape (wider
+         than tall) instead of .acc__arrow's tall, narrow shape. */
+      .fig-ex__arrow--tabular  { width: calc(clamp(30px, 3.2vw, 45px) * 1.533); }
+      .fig-ex__arrow--oldstyle { width: calc(clamp(30px, 3.2vw, 45px) * 1.933); }
+      .fig-ex__arrow--lining   { width: calc(clamp(30px, 3.2vw, 45px) * 1.667); }
+      .fig-ex__arrow--opentype { width: calc(clamp(30px, 3.2vw, 45px) * 2.556); }
+      /* Positioned using exact tangent-line safety against the nums circle
+         (center 50%/11.5% top-units, radius 31.5% of canvas width): any
+         element entirely left of 18.5% or entirely right of 81.5% is
+         mathematically clear of the circle at every mobile width,
+         independent of the element's own fixed pixel size — 0%/85% used
+         for extra margin at the narrowest phones.
+         All positions below are pure % of .fig-ex-sec__canvas (the
+         containing block) — no fixed-px terms — so each element stays
+         locked to the same spot relative to the circles across the whole
+         mobile range, instead of drifting as the viewport width changes.
+         (Converted from the previous accumulated px nudges, referenced
+         against a 400px-wide viewport.) */
+      .fig-ex__lbl--lining    { left: 2%;     top: 2.98%;  }
+      .fig-ex__lbl--oldstyle  { left: 82.28%; top: 0%;  }
+      .fig-ex__lbl--tabular   { left: 0.64%;  top: 20.54%; }
+      .fig-ex__lbl--opentype  { left: 56.46%; top: 49.27%; white-space: normal; width: 140px; text-align: center; line-height: 1.1; }
+      .fig-ex__arrow--lining   { left: 8.15%;  top: 5.51%;  }
+      .fig-ex__arrow--oldstyle { left: 78.21%; top: 2.53%;  }
+      .fig-ex__arrow--tabular  { left: 9.51%;  top: 16.99%; }
+      .fig-ex__arrow--opentype { left: 75.49%; top: 45.71%; transform: rotate(45deg); }
     }
 
     /* ─── SECTION 15: BOOK MOCKUP ─────────────────────────────────── */
@@ -1747,27 +1893,52 @@
     /* z-index only affects paint order, not layout/overflow — unrelated to
        the scroll-bounce fix above, so this is safe to raise. Above the pill
        overlay (z-index:auto). */
-    .book-sec__img { position: absolute; left: 13.906%; top: -38.1%; width: 78.385%; height: auto; display: block; z-index: 3; }
+    /* Scroll parallax writes only the --book-parallax-y custom property (see JS),
+       never the transform itself — the mobile rule below needs its own
+       translateX(-50%) in that same transform for centering, and a plain
+       img.style.transform assignment from JS would silently wipe that out. */
+    .book-sec__img { position: absolute; left: 13.906%; top: -38.1%; width: 78.385%; height: auto; display: block; z-index: 3; transform: translateY(var(--book-parallax-y, 0px)); }
     .book-sec__pill { position: absolute; left: 76.834vw; top: 77.2%; width: 28.958vw; aspect-ratio: 1; background: #fff; border-radius: 50%; }
     .book-sec__pill-text {
       position: absolute; left: 88.943vw; top: 89.1%; transform: translate(-50%, -50%); text-align: center;
-      font-family: 'Agrave Pro', Arial, sans-serif; white-space: nowrap;
+      font-family: 'Agrave Pro', Arial, sans-serif; white-space: nowrap; z-index: 4; pointer-events: auto;
     }
-    .book-sec__pill-text span { display: block; font-weight: 400; font-size: clamp(11px, 1.667vw, 32px); color: #9FABA4; line-height: 1; margin-bottom: -0.15em; transform: translateX(-20px); }
+    .book-sec__pill-text span { display: block; font-weight: 400; font-size: clamp(12px, 1.8vw, 35px); color: #9FABA4; line-height: 1; margin-bottom: -0.15em; transform: translateX(-24px); }
     .book-sec__pill-text b    { display: block; font-weight: 700; font-size: clamp(17px, 2.6vw, 50px); color: #84948B; line-height: 1; }
     .book-sec__cta {
       position: absolute; left: 87.225vw; top: calc(59.1% - 30px); transform: translate(-50%, -50%); text-align: center;
-      font-family: 'Agrave Pro', Arial, sans-serif; font-weight: 400; font-size: clamp(13px, 1.667vw, 32px);
-      color: #E8ECEA; white-space: nowrap; opacity: 0;
+      font-family: 'Agrave Pro', Arial, sans-serif; font-weight: 400; font-size: clamp(8px, 2.2vw, 34px); line-height: 1.1;
+      color: #E8ECEA; white-space: nowrap; opacity: 0; z-index: 4; pointer-events: auto;
     }
     .book-sec__cta b { font-weight: 700; color: #fff; }
-    .book-sec__arrow { position: absolute; left: calc(87.518vw - 25px); top: calc(65% - 30px); width: 5.557vw; }
+    .book-sec__arrow { position: absolute; left: calc(87.518vw - 45px); top: calc(65% - 30px); width: calc(clamp(30px, 3.2vw, 45px) * 2.40); transform: rotate(-10deg); }
     .book-sec__arrow svg { display: block; width: 100%; height: auto; }
     .book-sec__arrow path { stroke-linecap: round; }
+    /* No mobile override on .book-sec__canvas itself on purpose — the
+       section's height now tracks the same 1920/1000 ratio as larger
+       viewports (was pinned to a fixed 70vh/480px before, which is why the
+       pill/CTA read "too far" from the book on mobile: every position on
+       this canvas is defined in %/vw, and those only match the desktop
+       layout when the ratio itself matches). */
     @media (max-width: 640px) {
-      .book-sec__canvas { aspect-ratio: auto; height: 70vh; min-height: 480px; }
+      .book-sec__img { left: 50%; width: 99.154%; transform: translateX(-50%) translateY(calc(var(--book-parallax-y, 0px) - 150px)); }
+      /* Book grew 10% bigger on mobile — nudge these dots up so the book's
+         enlarged top edge doesn't cover them. */
+      .book-sec__dot--1 { top: calc(-24.6% - 175px); }
+      .book-sec__dot--2 { top: calc(-23.7% - 175px); }
+      .book-sec__dot--3 { top: calc(-38.7% - 250px); }
+      .book-sec__pill-text { transform: translate(calc(-50% - 10px), -50%); }
+      /* Matches the "Individual glyph shapes" mobile annotation convention. */
+      .book-sec__cta { transform: translate(calc(-50% - 45px), calc(-50% - 10px)); font-size: clamp(12px, 4.18vw, 65px); }
+      .book-sec__arrow { left: calc(87.518vw - 110px); top: calc(65% - 30px); width: calc(clamp(30px, 3.2vw, 45px) * 2.40); }
+      .book-sec__pill { transform-origin: 100% 100%; transform: scale(1.15); }
+      .book-sec__pill-text b { font-size: clamp(12px, 4.18vw, 65px); }
+      .book-sec__pill-text span { font-size: clamp(19px, 3vw, 52px); transform: translateX(-14px); }
     }
     .book-sec__spacer { background: #FBFCFB; min-height: 200px; width: 100%; display: flex; align-items: center; justify-content: center; padding: 96px 24px 48px; }
+    @media (max-width: 640px) {
+      .book-sec__spacer { min-height: 120px; padding: 48px 24px 32px; }
+    }
     /* Single self-contained SVG (wordmark + PRO blob baked into one shape) —
        no separately-positioned overlay element, so nothing can overhang its
        own box the way the old two-piece badge did. */
@@ -2702,8 +2873,8 @@
           <path d="M451.785 684.969C408.446 630.242 401.24 535.872 454.816 494.346" stroke="#77A6C5" stroke-width="2.5" stroke-linecap="round"/>
           <circle cx="457.133" cy="491" r="4" transform="rotate(-124 457.133 491)" stroke="#77A6C5" stroke-width="2.5" stroke-linecap="round"/>
         </g>
-        <path d="M1038.72 651.947C1013.62 568.921 1203.49 551.704 1130.92 399.353" stroke="#77A6C5" stroke-width="2.5" stroke-linecap="round"/>
-        <circle cx="1129" cy="395" r="4" stroke="#77A6C5" stroke-width="2.5" stroke-linecap="round"/>
+        <path id="figures-keep-path" d="M1038.72 651.947C1013.62 568.921 1203.49 551.704 1130.92 399.353" stroke="#77A6C5" stroke-width="2.5" stroke-linecap="round"/>
+        <circle id="figures-keep-dot" cx="1129" cy="395" r="4" stroke="#77A6C5" stroke-width="2.5" stroke-linecap="round"/>
         <g clip-path="url(#fig-clip1)">
           <path d="M1291.72 76.9102C1201.6 74.3655 1108.61 142.151 1120.15 232.629" stroke="#77A6C5" stroke-width="2.5" stroke-linecap="round"/>
           <circle cx="4" cy="4" r="4" transform="matrix(-0.992546 0.121869 0.121869 0.992546 1124.45 233.418)" stroke="#77A6C5" stroke-width="2.5" stroke-linecap="round"/>
@@ -2726,6 +2897,7 @@
       <span class="figures-lbl figures-lbl--2">With Numerators &amp; Denominators</span>
       <span class="figures-lbl figures-lbl--3">With Superiors &amp; Inferiors</span>
     </div>
+    <span class="figures-lbl figures-lbl--summary">Every figure style you&#39;ll need</span>
   </section>
 
   <!-- ── SECTION 14: FIGURES EXAMPLES ── -->
@@ -2740,11 +2912,11 @@
         <div style="position: absolute; inset: 0; transform: translateY(-20px);">
         <p class="fig-ex__nums-row" style="top: calc(50% - 47.778cqh);">69690173514725389017205117491466</p>
         <p class="fig-ex__nums-row" style="top: calc(50% - 38.254cqh);">141592653589793238462643383279502</p>
-        <p class="fig-ex__nums-row" style="top: calc(50% - 28.571cqh); transform: translateX(calc(-50% + 105px));" data-highlight="lining-proportional">88419716<b style="font-feature-settings:'lnum' 1,'pnum' 1">0123456789</b><b style="font-feature-settings:'zero' 1,'lnum' 1,'pnum' 1">0</b>9399375105820974944</p>
+        <p class="fig-ex__nums-row" style="top: calc(50% - 28.571cqh);" data-highlight="lining-proportional">88419716<b style="font-feature-settings:'lnum' 1,'pnum' 1">0123456789</b><b style="font-feature-settings:'zero' 1,'lnum' 1,'pnum' 1">0</b>9399375105820974944</p>
         <p class="fig-ex__nums-row" style="top: calc(50% - 18.889cqh); font-feature-settings:'onum' 1;" data-highlight="oldstyle-proportional">5923078164062<b style="font-feature-settings:'onum' 1,'pnum' 1">0123456789</b><b style="font-feature-settings:'zero' 1,'onum' 1,'pnum' 1">0</b>8620899862</p>
         <p class="fig-ex__nums-row" style="top: calc(50% - 9.206cqh); font-feature-settings:'onum' 1;">803482534211706798214808651328230664709</p>
         <p class="fig-ex__nums-row" style="top: calc(50% + 0.635cqh); font-feature-settings:'lnum' 1,'tnum' 1;">141592653589793238462643383279502</p>
-        <p class="fig-ex__nums-row" style="top: calc(50% + 10.000cqh); transform: translateX(calc(-50% + 105px)); font-feature-settings:'lnum' 1,'tnum' 1;" data-highlight="lining-tabular">88419716<b style="font-feature-settings:'lnum' 1,'tnum' 1">0123456789</b><b style="font-feature-settings:'zero' 1,'lnum' 1,'tnum' 1">0</b>9399375105820974944</p>
+        <p class="fig-ex__nums-row" style="top: calc(50% + 10.000cqh); font-feature-settings:'lnum' 1,'tnum' 1;" data-highlight="lining-tabular">88419716<b style="font-feature-settings:'lnum' 1,'tnum' 1">0123456789</b><b style="font-feature-settings:'zero' 1,'lnum' 1,'tnum' 1">0</b>9399375105820974944</p>
         <p class="fig-ex__nums-row" style="top: calc(50% + 19.365cqh); font-feature-settings:'onum' 1,'tnum' 1;" data-highlight="oldstyle-tabular">5923078164062<b style="font-feature-settings:'onum' 1,'tnum' 1">0123456789</b><b style="font-feature-settings:'zero' 1,'onum' 1,'tnum' 1">0</b>8620899862</p>
         <p class="fig-ex__nums-row" style="top: calc(50% + 28.730cqh); font-feature-settings:'onum' 1,'tnum' 1;">803482534211706798214808651328230664709</p>
         <p class="fig-ex__nums-row" style="top: calc(50% + 38.095cqh); font-feature-settings:'onum' 1,'tnum' 1;">183645273594078275501928464787</p>
@@ -3776,13 +3948,13 @@
         { sectionId: 'section-twelve', labelSel: '.acc__ann-text', stemId: 'acc-arrow-stem', headId: 'acc-arrow-head', bias: -0.48 },
         // Section 14: four arrows staggered later and further apart than the single-arrow
         // sections above, since they all share one (taller) section's scroll progress.
-        { sectionId: 'section-fourteen', labelSel: '.fig-ex__lbl--lining',   stemId: 'lining-arrow-stem',   headId: 'lining-arrow-head',   bias: 0.90 },
-        { sectionId: 'section-fourteen', labelSel: '.fig-ex__lbl--oldstyle', stemId: 'oldstyle-arrow-stem', headId: 'oldstyle-arrow-head', bias: 0.75 },
-        { sectionId: 'section-fourteen', labelSel: '.fig-ex__lbl--tabular',  stemId: 'tabular-arrow-stem',  headId: 'tabular-arrow-head',  bias: 0.60 },
-        { sectionId: 'section-fourteen', labelSel: '.fig-ex__lbl--opentype', stemId: 'opentype-arrow-stem', headId: 'opentype-arrow-head', bias: -0.55 },
+        { sectionId: 'section-fourteen', labelSel: '.fig-ex__lbl--lining',   stemId: 'lining-arrow-stem',   headId: 'lining-arrow-head',   bias: 0.75, mobileBias: -0.30 },
+        { sectionId: 'section-fourteen', labelSel: '.fig-ex__lbl--oldstyle', stemId: 'oldstyle-arrow-stem', headId: 'oldstyle-arrow-head', bias: 0.60, mobileBias: -0.30 },
+        { sectionId: 'section-fourteen', labelSel: '.fig-ex__lbl--tabular',  stemId: 'tabular-arrow-stem',  headId: 'tabular-arrow-head',  bias: 0.45, mobileBias: -0.30 },
+        { sectionId: 'section-fourteen', labelSel: '.fig-ex__lbl--opentype', stemId: 'opentype-arrow-stem', headId: 'opentype-arrow-head', bias: -0.50 },
         // Positive bias so it finishes with less scroll — section 15 is followed
         // by a short section 16, leaving little room for the reveal to complete.
-        { sectionId: 'section-fifteen', labelSel: '.book-sec__cta', stemId: 'google-arrow-stem', headId: 'google-arrow-head', bias: 0.15 },
+        { sectionId: 'section-fifteen', labelSel: '.book-sec__cta', stemId: 'google-arrow-stem', headId: 'google-arrow-head', bias: 0.55, ramp: 0.6 },
       ].map(function (cfg) {
         const section = document.getElementById(cfg.sectionId);
         if (!section) return null;
@@ -3813,6 +3985,7 @@
       function update() {
         if (!inited) return;
         const vh = window.innerHeight;
+        const isMobile = window.matchMedia('(max-width: 640px)').matches;
 
         // Read phase — one rect per distinct section (sections shared by
         // multiple items, like section-fourteen, are only measured once).
@@ -3825,7 +3998,13 @@
         items.forEach(function (item) {
           const rect     = rects.get(item.section);
           const centre   = rect.top + rect.height / 2;
-          const progress = Math.max(0, Math.min(1, (vh - centre) / (vh / 2) + (item.cfg.bias || 0)));
+          const bias     = (item.cfg.bias || 0) + (isMobile ? (item.cfg.mobileBias || 0) : 0);
+          const raw      = (vh - centre) / (vh / 2);
+          // ramp < 1 compresses the transition into a shorter scroll distance
+          // while keeping the same end point (raw = 1 - bias) — used to
+          // delay the start of an animation without moving its finish.
+          const ramp     = item.cfg.ramp || 1;
+          const progress = Math.max(0, Math.min(1, (raw + bias - (1 - ramp)) / ramp));
 
           // Label fades in 0–40 %
           if (item.label) item.label.style.opacity =
@@ -3849,10 +4028,10 @@
     (function () {
       'use strict';
       const targets = [
-        { el: document.querySelector('.fig-ex__circle--chem'),     depth: 0.05 },
+        { el: document.querySelector('.fig-ex__circle--chem'),     depth: 0.10 },
         { el: document.querySelector('.fig-ex__circle--nums'),     depth: 0.045 },
         { el: document.querySelector('.fig-ex__circle--opentype'), depth: -0.06 },
-        { el: document.querySelector('.fig-ex__circle--emc2'),     depth: 0.04 },
+        { el: document.querySelector('.fig-ex__circle--emc2'),     depth: 0.10 },
         { el: document.querySelector('.book-sec__dot--1'),         depth: 0.14 },
         { el: document.querySelector('.book-sec__dot--2'),         depth: 0.08 },
         { el: document.querySelector('.book-sec__dot--3'),         depth: 0.18 },
@@ -3897,22 +4076,26 @@
       window.addEventListener('scroll', update, { passive: true });
     })();
 
-    // Book image — bounded scroll movement: starts 150px higher, ends 10px higher
+    // Book image — bounded scroll movement: starts 150px higher, ends 20px higher
     // than its resting position as it scrolls through the viewport.
     (function () {
       'use strict';
       const img = document.querySelector('.book-sec__img');
       if (!img) return;
       const START_OFFSET = -150;
-      const END_OFFSET    = -10;
+      // Mobile ends 50px higher than desktop (-70 vs -20) since the book
+      // itself is scaled 10% bigger there.
+      const END_OFFSET_DESKTOP = -20;
+      const END_OFFSET_MOBILE  = -70;
 
       function update() {
         const vh = window.innerHeight;
+        const endOffset = window.matchMedia('(max-width: 640px)').matches ? END_OFFSET_MOBILE : END_OFFSET_DESKTOP;
         const rect = img.getBoundingClientRect();
         const centre = rect.top + rect.height / 2;
         const progress = Math.max(0, Math.min(1, (vh - centre) / (vh / 2)));
-        const offset = START_OFFSET + (END_OFFSET - START_OFFSET) * progress;
-        img.style.transform = 'translateY(' + offset.toFixed(2) + 'px)';
+        const offset = START_OFFSET + (endOffset - START_OFFSET) * progress;
+        img.style.setProperty('--book-parallax-y', offset.toFixed(2) + 'px');
       }
 
       requestAnimationFrame(update);
@@ -4164,7 +4347,10 @@
         if (isMobile) {
           // Only "One of the best" (pathIdx 2) is visible on mobile — play it after
           // the selecting animation (highlights finish ≈ 0.04 + 6·0.06 = 0.40).
-          drawAnn(2, Math.max(0, Math.min(1, (progress - 0.5) / 0.5)));
+          // Starts earlier (0.30 instead of 0.50) so it finishes with a gap
+          // before the matrix rain background reveal kicks in, instead of the
+          // two running back-to-back.
+          drawAnn(2, Math.max(0, Math.min(1, (progress - 0.30) / 0.5)));
         } else {
           // Desktop — spatial order: top-L → top-R → left → bottom-L → bottom-R
           const ORDER = [1, 3, 4, 2, 0];
@@ -4199,6 +4385,10 @@
       // Label DOM order: [Tabular(0), Lining & Oldstyle(1), With Num&Denom(2), With Sup&Inf(3)]
       const lblAll  = Array.from(section.querySelectorAll('.figures-lbl'));
       const LBL_MAP = [1, 2, 3, 0];
+      // Mobile-only composite label — not part of LBL_MAP (that only covers the
+      // four individual labels), so it needs its own opacity tied to the same
+      // pathIdx=2 (With Superiors & Inferiors) progress: dot → line → text.
+      const summaryLbl = section.querySelector('.figures-lbl--summary');
 
       // Paths where SVG start = text side, end = dot side — must draw in reverse
       const FIG_REV = new Set([1, 2, 3]);
@@ -4227,6 +4417,7 @@
         if (dot) dot.style.opacity = dotT;
         path.style.strokeDashoffset = parseFloat(path.dataset.dir) * parseFloat(path.dataset.len) * (1 - lineT);
         if (lbl) lbl.style.opacity = lblT;
+        if (pathIdx === 2 && summaryLbl) summaryLbl.style.opacity = lblT;
       };
 
       function update() {
