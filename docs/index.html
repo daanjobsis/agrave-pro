@@ -137,9 +137,28 @@
       height: auto;
     }
 
+    /* The wordmark keeps shrinking below the breakpoint but the badge's 72px
+       min clamp doesn't, so it grows out of proportion (32% of the wordmark at
+       375px vs 18.6% at 540px). Tie all three values to the wordmark's own
+       width instead, locked to the 540px ratio. `top` can't use % — that would
+       resolve against height — so it repeats the wordmark's width formula. */
+    @media (max-width: 640px) {
+      .hero__pro-badge {
+        width: 18.556%;
+        right: -14.433%;
+        top: calc((100vw - 152px) * -0.0567);
+      }
+    }
+
     /* Tagline */
     .hero__tagline {
-      margin-top: 28px;
+      /* Was a fixed 28px, which grew out of proportion as the wordmark shrank
+         (28px against a 223px wordmark at 375px = 12.6%, vs 4.1% at the 680px
+         cap). Tied to the wordmark's own width instead, locked to that 4.1%
+         ratio — a % margin can't be used because it would resolve against the
+         containing block's width, so this repeats the wordmark's formula.
+         At >=832px it still resolves to exactly 28px, as before. */
+      margin-top: calc(min(680px, 100vw - 152px) * 0.0412);
       font-family: 'Agrave Pro', Arial, sans-serif;
       font-size: clamp(18px, 4.75vw, 38px);
       letter-spacing: 0.01em;
@@ -150,6 +169,9 @@
     }
     .hero__tagline .t-reg  { font-weight: 400; color: #B8845F; }
     .hero__tagline .t-bold { font-weight: 700; color: #945625; }
+    @media (max-width: 640px) {
+      .hero__tagline { font-size: clamp(21px, 5.5vw, 38px); }
+    }
     ::selection { background: #945625; color: #ffffff; }
 
     /* Scroll-hint arrow */
@@ -767,6 +789,9 @@
     @media (max-width: 640px) {
       /* Annotation: match the site's mobile annotation size (kern-lbl / liga-lbl / acc__ann-text). */
       .zulu__dutch-label { font-size: clamp(12px, 4.18vw, 65px); }
+      /* NOTE: .zulu__dutch positioning is set in the later max-width:640px
+         block (search "zulu__mockup-wrap") — same specificity, so that one
+         wins. Put position tweaks there, not here. */
     }
 
     /* ─── SECTION 6: TICKETS ─────────────────────────────────────── */
@@ -1116,7 +1141,7 @@
       .script-sec__ann-svg { transform: scaleX(-1) rotate(60deg); }
       /* Annotations: match the site's mobile annotation size (kern-lbl / liga-lbl / acc__ann-text). */
       .script-sec__ann-text { font-size: clamp(12px, 4.18vw, 65px); }
-      .glyphs-sec__irony { font-size: clamp(12px, 4.18vw, 65px); transform: translate(-5px, 50px); }
+      .glyphs-sec__irony { font-size: clamp(12px, 4.18vw, 65px); transform: translate(-30px, 50px); }
     }
 
     /* ─── SECTION 10: LIGATURES ──────────────────────────────────── */
@@ -1275,7 +1300,9 @@
 
     @media (max-width: 640px) {
       .zulu__mockup-wrap { width: 100%; }
-      .zulu__dutch { left: 2%; top: 18%; }
+      /* -200px moves the label and its arrow up together (both are children of
+         this flex column). */
+      .zulu__dutch { left: 2%; top: calc(18% - 100px); }
       .tickets-sec__strip--a { top: 745px; }
       .tickets-sec__strip--b { top: 941px; }
       .zulu__from { font-size: 18px; }
@@ -1842,8 +1869,12 @@
          shrinks its label at the same ratio the desktop vw-based clamp
          keeps relative to that circle's own (much smaller) desktop width. */
       .fig-ex__circle--chem, .fig-ex__circle--emc2, .fig-ex__circle--math { container-type: size; }
-      .fig-ex__chem { font-size: 24.2cqw; }
-      .fig-ex__emc2 { font-size: 30.9cqw; }
+      /* Maximised: the base rule's `padding: 0 6%` capped the text at 88cqw of
+         width, so it's cut back to 2% here to give the larger size room. The
+         circle itself (width above) is unchanged. */
+      .fig-ex__circle--chem, .fig-ex__circle--emc2 { padding: 0 2%; }
+      .fig-ex__chem { font-size: 26.1cqw; }
+      .fig-ex__emc2 { font-size: 33.4cqw; }
       .fig-ex__math { font-size: 10.31cqw; }
       /* Labels/arrows re-pointed at the numbers circle (tabular/oldstyle/
          lining/opentype) — sized to match the "Individual glyph shapes"
@@ -3065,6 +3096,14 @@
         [45, 70,  0.20],
       ];
 
+      // SIZES/RISER_SIZES are absolute px authored against a 1440px-wide
+      // reference. Unscaled, a 300px blob is 21% of a desktop screen but 80% of
+      // a 375px phone — hence the giant blobs on mobile. Below the breakpoint,
+      // scale radii by the width ratio so the blob-to-screen proportion matches
+      // medium/large. Above it, nothing changes.
+      const SIZE_REF_W = 1440;
+      function sizeScale() { return W <= 640 ? W / SIZE_REF_W : 1; }
+
       function pickFrom(table) {
         let roll = Math.random(), acc = 0;
         for (const [lo, hi, w] of table) {
@@ -3073,12 +3112,17 @@
         }
         return table[0][0];
       }
-      function pickRadius()      { return pickFrom(SIZES); }
-      function pickRiserRadius() { return pickFrom(RISER_SIZES); }
+      function pickRadius()      { return Math.max(3, pickFrom(SIZES) * sizeScale()); }
+      function pickRiserRadius() { return Math.max(3, pickFrom(RISER_SIZES) * sizeScale()); }
 
       function rand(a, b) { return a + Math.random() * (b - a); }
 
-      function borderPx(r) { return (1.2 + (r / MAX_R) * 2.0) * 3.0; }
+      // Un-scales r before the ratio term, then re-scales the result, so the
+      // border stays the same *fraction* of the blob at every viewport.
+      function borderPx(r) {
+        const s = sizeScale();
+        return Math.max(0.75, (1.2 + (r / s / MAX_R) * 2.0) * 3.0 * s);
+      }
       function borderWidth(r) { return borderPx(r).toFixed(2); }
 
       // Minimum center distance — outer edges must not overlap (borders included)
@@ -3123,7 +3167,14 @@
         // Keep any riser bubbles already in the array; reset the rest
         bubbles = bubbles.filter(b => b.isRiser);
 
-        const bubbleCount = Math.max(80, Math.min(700, Math.round(BUBBLE_DENSITY * W * H)));
+        // Smaller blobs cover less area, so raise the count to keep the same
+        // visual density. Capped lower than desktop because the repulsion pass
+        // is O(n²) and this runs on a phone.
+        const s = sizeScale();
+        const bubbleCount = Math.max(
+          80,
+          Math.min(s < 1 ? 340 : 700, Math.round(BUBBLE_DENSITY * W * H / (s * s)))
+        );
         const placed = [];
         let attempts = 0;
         const maxAttempts = bubbleCount * 180;
@@ -3380,17 +3431,39 @@
         const vh = window.innerHeight;
 
         const sectionCentre = sectionRect.top + sectionRect.height / 2;
+        // Mobile scrolls far faster (a flick covers much more page than a
+        // trackpad), so widen the scroll range the animation spans — same
+        // animation, more scroll distance, so it reads slower.
+        // The shift compensates for that wider range: without it, progress
+        // would only reach 1 once the section centre is near the top of the
+        // viewport. +0.4vh moves start AND end earlier so the animation still
+        // finishes with the big text centred, exactly as before.
+        const mobile = window.innerWidth <= 640;
+        // These two are deliberately independent (shift is NOT derived from
+        // range) so start and end can be tuned separately for this annotation:
+        //   start (progress 0) → sectionCentre === vh + shift
+        //   end   (progress 1) → sectionCentre === vh - range + shift
+        // centre DEcreases as you scroll down, so a smaller end value = later.
+        // Raising range alone moves the end later and leaves the start put.
+        const range  = mobile ? vh * 0.8 : vh / 2;
+        const shift  = mobile ? vh * 0.0 : 0;
         const progress = Math.max(0, Math.min(1,
-          (vh - sectionCentre) / (vh / 2)
+          (vh - sectionCentre + shift) / range
         ));
 
         // Baselines fade in first, before any annotation.
         if (baselinesGrp) baselinesGrp.style.opacity = Math.min(1, progress * 6);
 
-        const N    = ORDER.length;
-        const STEP = 1 / N;
+        // On mobile the CSS hides every annotation except #7 (see the
+        // .ann-path/.ann-dot/.leg__lbl :not() rules), so splitting the range
+        // across all 7 spent 6/7 of the scroll on invisible steps and then
+        // snapped #7 through in the final 1/7 — which is why it read as far
+        // faster than the other sections. Give the only visible one the whole
+        // range so its duration matches them.
+        const SEQ  = mobile ? [7] : ORDER;
+        const STEP = 1 / SEQ.length;
 
-        ORDER.forEach((n, i) => {
+        SEQ.forEach((n, i) => {
           const start = i * STEP;
           const t     = Math.max(0, Math.min(1, (progress - start) / STEP));
 
@@ -3628,8 +3701,15 @@
         // On mobile the section is very tall — trigger off the top so the
         // subtitle reaches full opacity before the SVG leaves the viewport.
         const trigger  = mobile ? rect.top : (rect.top + rect.height / 2);
-        const range    = mobile ? vh * 0.7  : vh / 2;
-        const progress = Math.max(0, Math.min(1, (vh - trigger) / range));
+        // range and shift are deliberately independent so start and end can be
+        // tuned separately for this annotation:
+        //   start (progress 0) → rect.top === vh + shift
+        //   end   (progress 1) → rect.top === vh - range + shift
+        // shift 0 means progress starts at 0 exactly when the section's top
+        // edge enters the bottom of the viewport; range is the scroll duration.
+        const range    = mobile ? vh * 0.8   : vh / 2;
+        const shift    = mobile ? vh * -0.2 : 0;
+        const progress = Math.max(0, Math.min(1, (vh - trigger + shift) / range));
 
         // Dot 0–25 %, line 20–100 %, subtitle 85–100 %
         if (dot)      dot.style.opacity            = Math.min(1, progress / 0.25);
@@ -3957,9 +4037,9 @@
         { sectionId: 'section-twelve', labelSel: '.acc__ann-text', stemId: 'acc-arrow-stem', headId: 'acc-arrow-head', bias: -0.48 },
         // Section 14: four arrows staggered later and further apart than the single-arrow
         // sections above, since they all share one (taller) section's scroll progress.
-        { sectionId: 'section-fourteen', labelSel: '.fig-ex__lbl--lining',   stemId: 'lining-arrow-stem',   headId: 'lining-arrow-head',   bias: 0.75, mobileBias: -0.30 },
-        { sectionId: 'section-fourteen', labelSel: '.fig-ex__lbl--oldstyle', stemId: 'oldstyle-arrow-stem', headId: 'oldstyle-arrow-head', bias: 0.60, mobileBias: -0.30 },
-        { sectionId: 'section-fourteen', labelSel: '.fig-ex__lbl--tabular',  stemId: 'tabular-arrow-stem',  headId: 'tabular-arrow-head',  bias: 0.45, mobileBias: -0.30 },
+        { sectionId: 'section-fourteen', labelSel: '.fig-ex__lbl--lining',   stemId: 'lining-arrow-stem',   headId: 'lining-arrow-head',   bias: 0.75, mobileBias: -0.10, mobileRamp: 0.8 },
+        { sectionId: 'section-fourteen', labelSel: '.fig-ex__lbl--oldstyle', stemId: 'oldstyle-arrow-stem', headId: 'oldstyle-arrow-head', bias: 0.60, mobileBias: -0.10, mobileRamp: 0.8 },
+        { sectionId: 'section-fourteen', labelSel: '.fig-ex__lbl--tabular',  stemId: 'tabular-arrow-stem',  headId: 'tabular-arrow-head',  bias: 0.45, mobileBias: -0.10, mobileRamp: 0.8 },
         { sectionId: 'section-fourteen', labelSel: '.fig-ex__lbl--opentype', stemId: 'opentype-arrow-stem', headId: 'opentype-arrow-head', bias: -0.50 },
         // Positive bias so it finishes with less scroll — section 15 is followed
         // by a short section 16, leaving little room for the reveal to complete.
@@ -4012,7 +4092,8 @@
           // ramp < 1 compresses the transition into a shorter scroll distance
           // while keeping the same end point (raw = 1 - bias) — used to
           // delay the start of an animation without moving its finish.
-          const ramp     = item.cfg.ramp || 1;
+          // mobileRamp overrides it below 640px, leaving desktop timing alone.
+          const ramp     = (isMobile && item.cfg.mobileRamp) || item.cfg.ramp || 1;
           const progress = Math.max(0, Math.min(1, (raw + bias - (1 - ramp)) / ramp));
 
           // Label fades in 0–40 %
@@ -4321,8 +4402,21 @@
         const rect     = document.getElementById('section-seven').getBoundingClientRect();
         const vh       = window.innerHeight;
         const centre   = rect.top + rect.height / 2;
-        const startDelay = -vh * 0.05;  // give the kerning animations a head start so they finish by the time the text is centred
-        const progress = Math.max(0, Math.min(1, (vh - centre - startDelay) / (vh / 2)));
+        // Wider range on mobile — fast flick-scrolling otherwise blows through
+        // the whole reveal in a few frames.
+        const mobile = window.innerWidth <= 640;
+        // 1.8vh (not 1.3) so there is room after the selecting animation for the
+        // annotation to play after it in sequence rather than on top of it:
+        // rect.top 1.0vh (progress 0) → -0.8vh (progress 1).
+        const range = mobile ? vh * 1.8 : vh / 2;
+        // give the kerning animations a head start so they finish by the time
+        // the text is centred. On mobile, -height/2 makes progress start at 0
+        // exactly when the section's top edge enters the bottom of the viewport.
+        // (It used to be vh*0.45 - range; because this section is only 150vw
+        // tall on mobile (~0.85vh), that started the animation while the section
+        // was still below the fold, so it was nearly done by the time you saw it.)
+        const startDelay = mobile ? -rect.height / 2 : -vh * 0.05;
+        const progress = Math.max(0, Math.min(1, (vh - centre - startDelay) / range));
 
         // Reveal each letter highlight instantly at its scroll threshold; the overlap
         // turns dark and the kerning number appears once both letters are present.
@@ -4330,8 +4424,12 @@
         // Mobile: the selecting animation runs FIRST (earlier + tighter), then the
         // single visible annotation ("One of the best") plays after it finishes.
         const isMobile = window.matchMedia('(max-width: 640px)').matches;
-        const HL_DELAY = isMobile ? 0.04 : 0.25;
-        const HL_GAP   = isMobile ? 0.06 : 0.1;
+        // Mobile values place the selecting animation between rect.top 0.45vh
+        // and 0.0 (range is 1.8vh, so progress = (vh - rect.top) / 1.8vh):
+        //   first box   → 0.306                      = rect.top 0.45vh
+        //   last number → 0.306 + 6*0.0333 + 0.05 = 0.556 = rect.top 0.0
+        const HL_DELAY = isMobile ? 0.306  : 0.25;
+        const HL_GAP   = isMobile ? 0.0333 : 0.1;
         const kernVis = (el, step, extra = 0) => {
           el.style.opacity = (progress >= HL_DELAY + step * HL_GAP + extra) ? '1' : '0';
         };
@@ -4354,12 +4452,11 @@
         };
 
         if (isMobile) {
-          // Only "One of the best" (pathIdx 2) is visible on mobile — play it after
-          // the selecting animation (highlights finish ≈ 0.04 + 6·0.06 = 0.40).
-          // Starts earlier (0.30 instead of 0.50) so it finishes with a gap
-          // before the matrix rain background reveal kicks in, instead of the
-          // two running back-to-back.
-          drawAnn(2, Math.max(0, Math.min(1, (progress - 0.30) / 0.5)));
+          // Only "One of the best" (pathIdx 2) is visible on mobile. Window
+          // 0.333 → 0.778 of the 1.8vh range = rect.top 0.4vh → -0.4vh, an
+          // 0.8vh duration. This deliberately overlaps the selecting animation
+          // (0.45vh → 0.0) rather than following it, so both play together.
+          drawAnn(2, Math.max(0, Math.min(1, (progress - 0.333) / 0.444)));
         } else {
           // Desktop — spatial order: top-L → top-R → left → bottom-L → bottom-R
           const ORDER = [1, 3, 4, 2, 0];
@@ -4434,14 +4531,27 @@
         const rect     = section.getBoundingClientRect();
         const vh       = window.innerHeight;
         const centre   = rect.top + rect.height / 2;
-        const progress = Math.max(0, Math.min(1, (vh - centre) / (vh / 2)));
+        const mobile = window.innerWidth <= 640;
+        // Mobile: the +height/2 in shift cancels the centre offset, making this
+        // top-based (so the numbers below don't drift with the section's height
+        // between viewports), and the -0.6vh sets where it starts:
+        //   start (progress 0) → rect.top 0.6vh
+        //   end   (progress 1) → rect.top -0.2vh   (range 0.8vh = the duration)
+        const range  = mobile ? vh * 0.8 : vh / 2;
+        const shift  = mobile ? rect.height / 2 - vh * 0.4 : 0;
+        const progress = Math.max(0, Math.min(1, (vh - centre + shift) / range));
 
         // Spatial order: top-right (Tabular) → mid-left (Lining & Oldstyle) →
         // bottom-left (With Numerators & Denominators) → bottom-right (With Superiors & Inferiors)
         const ORDER = [3, 0, 1, 2];
-        const N     = ORDER.length;
-        const STEP  = 1 / N;
-        ORDER.forEach((pathIdx, step) => {
+        // On mobile the CSS hides every path/dot except #figures-keep-path /
+        // #figures-keep-dot (pathIdx 2) and every label except --summary, yet
+        // the stagger still reserved a slot for all four — so pathIdx 2 sat at
+        // step 3 with a 0.25 window and ~0.98vh of the scroll showed nothing.
+        // Give the one visible annotation the whole range instead.
+        const SEQ   = mobile ? [2] : ORDER;
+        const STEP  = 1 / SEQ.length;
+        SEQ.forEach((pathIdx, step) => {
           drawAnn(pathIdx, Math.max(0, Math.min(1, (progress - step * STEP) / STEP)));
         });
       }
@@ -4547,7 +4657,11 @@
         const rect     = bg.getBoundingClientRect();
         const vh       = window.innerHeight;
         const centre   = rect.top + rect.height / 2;
-        const progress = Math.max(0, Math.min(1, (vh - centre) / (vh / 2)));
+        // Mobile: start the reveal 0.2vh later. The whole window moves, so the
+        // duration stays 0.5vh — box centre 0.8vh → 0.3vh instead of 1.0 → 0.5.
+        const mobile   = window.innerWidth <= 640;
+        const delay    = mobile ? vh * 0.2 : 0;
+        const progress = Math.max(0, Math.min(1, (vh - centre - delay) / (vh / 2)));
 
         columns.forEach((glyphs, col) => {
           const delay = DELAYS[col % DELAYS.length];
@@ -4678,19 +4792,34 @@
         const rect     = document.getElementById('section-ten').getBoundingClientRect();
         const vh       = window.innerHeight;
         const centre   = rect.top + rect.height / 2;
-        const startDelay = vh * 0.2;  // begin the annotation animations a bit later on scroll
-        const progress = Math.max(0, Math.min(1, (vh - centre - startDelay) / (vh / 2)));
+        // Wider range on mobile — fast flick-scrolling otherwise blows through
+        // the whole reveal in a few frames.
+        const mobile = window.innerWidth <= 640;
+        // Mobile: -height/2 makes this top-based, and the +0.6vh shifts the
+        // start so progress 0 lands at rect.top 0.4vh. With range 0.94vh the
+        // annotation's 0.85 window (below) spans rect.top 0.4vh → -0.4vh, an
+        // 0.8vh duration matching the other sections.
+        const range = mobile ? vh * 0.94 : vh / 2;
+        // begin the annotation animations a bit later on scroll.
+        const startDelay = mobile ? -rect.height / 2 + vh * 0.6 : vh * 0.2;
+        const progress = Math.max(0, Math.min(1, (vh - centre - startDelay) / range));
 
         // Spatial order: top-L → top-R → bottom-L → bottom-C → bottom-R
         const ORDER = [2, 1, 3, 0, 4];
         // Each annotation's dot→line→label anim spans WINDOW of progress, staggered
         // by GAP. Tuned so the last annotation finishes well before progress hits 1,
         // leaving room for the blobs to pop in afterwards.
-        const GAP    = 0.14;   // stagger between annotations
-        const WINDOW = 0.24;   // length of one annotation's full anim
+        // On mobile the CSS hides four of the five annotations (only
+        // #liga-keep-path / #liga-keep-dot survive), yet the stagger still
+        // reserved a slot for each — so pathsC[0] sat at step 3 with a 0.24
+        // window and ~0.99vh of the scroll produced nothing visible. Give the
+        // one visible annotation the whole range instead.
+        const GAP    = mobile ? 0    : 0.14;   // stagger between annotations
+        const WINDOW = mobile ? 0.85 : 0.24;   // length of one annotation's full anim
         const BEAT   = 0.07;   // pause after the text before its blob pops
+        const SEQ    = mobile ? [0] : ORDER;
 
-        ORDER.forEach((pathIdx, step) => {
+        SEQ.forEach((pathIdx, step) => {
           const path    = pathsC[pathIdx];
           const dot     = dots[pathIdx];
           const lblIdxs = LBL_GROUPS[pathIdx] || [];
