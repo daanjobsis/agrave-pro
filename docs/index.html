@@ -199,6 +199,11 @@
       color: #945625;
       line-height: 1;
     }
+    /* Must come AFTER the rule above — same specificity, so source order decides.
+       The arrow is a text glyph, so font-size is its size. */
+    @media (max-width: 640px) {
+      .hero__scroll-arrow { font-size: 56px; }
+    }
 
     @keyframes bob {
       0%, 100% { transform: translateX(-50%) translateY(0); }
@@ -943,7 +948,11 @@
          than the desktop 77vw because the 1.9× zoom is a transform (doesn't grow the
          layout box) and the label sits below — needs vertical room to avoid the
          zoomed artwork spilling into the next section, while still cutting brown. */
-      .kern { padding: 40px 0; overflow: visible; min-height: 150vw; }
+      /* 178vw matches .liga-sec's mobile height so the brown block and the green
+         one read as the same size. Safe for the scroll timing: the kerning
+         animation's startDelay is -rect.height/2, which cancels the height term
+         in `centre`, so its progress depends only on rect.top. */
+      .kern { padding: 40px 0; overflow: visible; min-height: 178vw; }
       .kern__wrap { overflow: visible; }
       /* 1.9× zoom centred on the "Kerning" word (boxes x524–1140, y216–474 → 56.3% 48.8%) */
       .kern__wrap svg {
@@ -1131,7 +1140,11 @@
       .glyphs-sec__shirt { width: 83.13%; }  /* 66.5% × 1.25 */
       .script-sec__doc   { width: 78.75%; }  /* 63% × 1.25 */
       .script-sec { min-height: 150vw; flex-direction: column; gap: 24px; } /* mobile height floor, matches Kerning */
-      .script-sec__bg { background-size: 128px auto; } /* ~80% of the native 160px tile — scaled down a bit on mobile */
+      /* Shorter band on mobile. The SVG is 160x614 (1:3.84), and `auto` keeps
+         that ratio, so the width value drives the height: 90px → ~345px tall
+         (was 128px → ~491px). Tiles get narrower too, which is why the ratio is
+         preserved rather than squashing the shapes. */
+      .script-sec__bg { background-size: 90px auto; }
       /* "Made for body copy!": desktop positions it absolutely to the right of the
          doc; on mobile there's no room beside it, so drop it into flow below instead. */
       .script-sec__ann {
@@ -1764,27 +1777,26 @@
        circle's own overflow:hidden — the Figma source used a per-row mask
        that turned out to just be the circle shape itself repeated, i.e.
        exactly what overflow:hidden already gives us here for free. */
+    /* Horizontal offsets are in cqw (1% of the nums circle's own width), not px,
+       so the dark-vs-light relationship is identical at every viewport and
+       breakpoint — the circle scales, and these scale with it. Calibrated from
+       the large viewport (>=1600px), which is the reference look: canvas capped
+       at 1600px, circle = 32.813% of that = 525px, so 1cqw = 5.25px.
+         rows        -5px  -> -0.952cqw
+         highlighted +100px -> +19.048cqw
+       They used to be fixed px, re-tuned by hand in three separate breakpoints
+       (-25/+80 base, -5/+100 at 1600px+, -10/+95 on mobile). Because the circle
+       itself scales, a constant px offset drifted: the same 105px gap read tiny
+       against the 525px desktop circle and huge against the mobile one. */
     .fig-ex__nums-row {
-      position: absolute; left: 50%; transform: translateX(calc(-50% - 25px));
+      position: absolute; left: 50%; transform: translateX(calc(-50% - 0.952cqw));
       font-family: 'Agrave Pro', Arial, sans-serif; font-weight: 300;
       font-size: 8.889cqh; line-height: 2.0; color: #CDDFEA; white-space: nowrap;
     }
     .fig-ex__nums-row b { font-weight: 400; color: #286F9B; }
-    /* Highlighted rows (the two callouts) sit 90px right of centre at their
-       original, unshifted baseline — kept 30px right of the rest of the rows
-       (which sit 15px left) so both track the same relative gap at every
-       breakpoint below. */
     .fig-ex__nums-row[data-highlight="lining-proportional"],
     .fig-ex__nums-row[data-highlight="lining-tabular"] {
-      transform: translateX(calc(-50% + 80px));
-    }
-    /* Large viewports (canvas at its 1600px cap): nudge every row 15px right */
-    @media (min-width: 1600px) {
-      .fig-ex__nums-row { transform: translateX(calc(-50% - 5px)); }
-      .fig-ex__nums-row[data-highlight="lining-proportional"],
-      .fig-ex__nums-row[data-highlight="lining-tabular"] {
-        transform: translateX(calc(-50% + 100px));
-      }
+      transform: translateX(calc(-50% + 19.048cqw));
     }
 
     .fig-ex__lbl {
@@ -1834,14 +1846,10 @@
          without the circles' own %-of-width sizing getting out of sync with
          their %-of-height top offsets. */
       .fig-ex-sec__canvas { aspect-ratio: 50 / 137; height: auto; }
-      /* Was inheriting the desktop -30px shift, which reads completely
-         differently against the much smaller mobile circle — reset to the
-         original baseline, then apply a mobile-appropriate -10px shift. */
-      .fig-ex__nums-row { transform: translateX(calc(-50% - 10px)); }
-      .fig-ex__nums-row[data-highlight="lining-proportional"],
-      .fig-ex__nums-row[data-highlight="lining-tabular"] {
-        transform: translateX(calc(-50% + 95px));
-      }
+      /* No .fig-ex__nums-row override here on purpose — the base rule's offsets
+         are in cqw (relative to the circle's own width), so the mobile circle
+         gets the same proportional layout automatically. A px override here is
+         what made mobile differ from desktop in the first place. */
       /* First-pass mobile cluster — no mobile layout existed for these
          circles before (they inherited the desktop %-positions verbatim
          against a squashed canvas). Scaled up + regrouped so the 480px-tall
@@ -1888,10 +1896,19 @@
          — matching only `width` previously rendered these ~2.5x smaller
          than that reference, since these viewBoxes are landscape (wider
          than tall) instead of .acc__arrow's tall, narrow shape. */
-      .fig-ex__arrow--tabular  { width: calc(clamp(30px, 3.2vw, 45px) * 1.533); }
-      .fig-ex__arrow--oldstyle { width: calc(clamp(30px, 3.2vw, 45px) * 1.933); }
-      .fig-ex__arrow--lining   { width: calc(clamp(30px, 3.2vw, 45px) * 1.667); }
-      .fig-ex__arrow--opentype { width: calc(clamp(30px, 3.2vw, 45px) * 2.556); }
+      /* Widths as % of .fig-ex-sec__canvas — the same containing block the
+         left/top percentages below resolve against — so the arrows scale in
+         lockstep with the canvas, the circles and the labels (whose font-size is
+         4.18vw, i.e. exactly proportional to viewport width).
+         They previously used clamp(30px, 3.2vw, 45px): at every mobile width
+         3.2vw is under 30px, so the clamp floored and each arrow stayed a
+         CONSTANT 30px x multiplier while everything around it scaled — which is
+         why an arrow sat correctly at 540px but off at 375px.
+         Calibrated to keep the exact 540px size: canvas = 540 - 32 = 508px. */
+      .fig-ex__arrow--tabular  { width: 9.05%; }   /* was 30 x 1.533 = 46.0px */
+      .fig-ex__arrow--oldstyle { width: 11.42%; }  /* was 30 x 1.933 = 58.0px */
+      .fig-ex__arrow--lining   { width: 9.84%; }   /* was 30 x 1.667 = 50.0px */
+      .fig-ex__arrow--opentype { width: 15.09%; }  /* was 30 x 2.556 = 76.7px */
       /* Positioned using exact tangent-line safety against the nums circle
          (center 50%/11.5% top-units, radius 31.5% of canvas width): any
          element entirely left of 18.5% or entirely right of 81.5% is
@@ -1907,7 +1924,11 @@
       .fig-ex__lbl--lining    { left: 2%;     top: 2.98%;  }
       .fig-ex__lbl--oldstyle  { left: 82.28%; top: 0%;  }
       .fig-ex__lbl--tabular   { left: 0.64%;  top: 20.54%; }
-      .fig-ex__lbl--opentype  { left: 56.46%; top: 49.27%; white-space: normal; width: 140px; text-align: center; line-height: 1.1; }
+      /* Width in em, not px: the font-size here is 4.18vw, so a fixed 140px wrapped
+         to two lines at 540px but still fitted on one line at 375px (smaller font,
+         same box). 6.2em is that same 140px expressed against the 540px font size,
+         so it now wraps after "OpenType" at every mobile width. */
+      .fig-ex__lbl--opentype  { left: 56.46%; top: 49.27%; white-space: normal; width: 6.2em; text-align: center; line-height: 1.1; }
       .fig-ex__arrow--lining   { left: 8.15%;  top: 5.51%;  }
       .fig-ex__arrow--oldstyle { left: 78.21%; top: 2.53%;  }
       .fig-ex__arrow--tabular  { left: 9.51%;  top: 16.99%; }
@@ -1961,19 +1982,45 @@
        this canvas is defined in %/vw, and those only match the desktop
        layout when the ratio itself matches). */
     @media (max-width: 640px) {
-      .book-sec__img { left: 50%; width: 99.154%; transform: translateX(-50%) translateY(calc(var(--book-parallax-y, 0px) - 150px)); }
+      /* -27.78vw, not -150px: the book's width is a % of the canvas, so it scales
+         with the viewport, and a constant px lift rode proportionally higher at
+         375px than at 540px — high enough to cover the sum above it. 27.78vw is
+         that same 150px at the 540px reference width (150/540). */
+      .book-sec__img { left: 50%; width: 99.154%; transform: translateX(-50%) translateY(calc(var(--book-parallax-y, 0px) - 27.78vw)); }
       /* Book grew 10% bigger on mobile — nudge these dots up so the book's
          enlarged top edge doesn't cover them. */
       .book-sec__dot--1 { top: calc(-24.6% - 175px); }
       .book-sec__dot--2 { top: calc(-23.7% - 175px); }
       .book-sec__dot--3 { top: calc(-38.7% - 250px); }
-      .book-sec__pill-text { transform: translate(calc(-50% - 10px), -50%); }
-      /* Matches the "Individual glyph shapes" mobile annotation convention. */
-      .book-sec__cta { transform: translate(calc(-50% - 45px), calc(-50% - 10px)); font-size: clamp(12px, 4.18vw, 65px); }
-      .book-sec__arrow { left: calc(87.518vw - 110px); top: calc(65% - 30px); width: calc(clamp(30px, 3.2vw, 45px) * 2.40); }
+      /* Every offset in this group is in vw rather than px, converted at the 540px
+         reference width (px / 5.40 = vw) so 540px looks exactly as before and
+         375px now matches it proportionally. The px versions didn't scale, so on
+         the narrower phone they were ~1.44x too large relative to the layout —
+         which is why the text and arrow sat differently at the two widths. */
+      .book-sec__pill-text { transform: translate(calc(-50% - 1.852vw), -50%); }
+      /* Matches the "Individual glyph shapes" mobile annotation convention.
+         `top` is overridden here because the base rule's -30px doesn't scale. */
+      .book-sec__cta {
+        top: calc(59.1% - 5.556vw);
+        transform: translate(calc(-50% - 8.333vw), calc(-50% - 1.852vw));
+        font-size: clamp(12px, 4.18vw, 65px);
+      }
+      /* Width in vw so it scales with the viewport, like the fig-ex arrows. It
+         used to be clamp(30px, 3.2vw, 45px) * 2.40, but 3.2vw is under 30px at
+         every mobile width, so the clamp floored and the arrow stayed a constant
+         72px while everything around it scaled. 13.333vw is that same 72px at the
+         540px reference width (72/540). Position now also in vw: the -110px and
+         -30px became -20.370vw and -5.556vw (87.518 - 20.370 = 67.148vw). */
+      .book-sec__arrow { left: 67.148vw; top: calc(65% - 5.556vw); width: 13.333vw; }
       .book-sec__pill { transform-origin: 100% 100%; transform: scale(1.15); }
       .book-sec__pill-text b { font-size: clamp(12px, 4.18vw, 65px); }
-      .book-sec__pill-text span { font-size: clamp(19px, 3vw, 52px); transform: translateX(-14px); }
+      /* "See on": font-size was clamp(19px, 3vw, 52px), but 3vw is 11-19px across
+         the mobile range, so the 19px floor always won and this line stayed a
+         CONSTANT size while "Google fonts" below it scaled (4.18vw) — making the
+         two read at different relative sizes at 375px vs 540px. 3.519vw is that
+         same 19px at the 540px reference. Offset converted to vw for the same
+         reason (-14px / 5.40). */
+      .book-sec__pill-text span { font-size: 3.519vw; transform: translateX(-2.593vw); }
     }
     .book-sec__spacer { background: #FBFCFB; min-height: 200px; width: 100%; display: flex; align-items: center; justify-content: center; padding: 96px 24px 48px; }
     @media (max-width: 640px) {
@@ -2949,7 +2996,10 @@
       </div>
 
       <div class="fig-ex__circle fig-ex__circle--nums" aria-hidden="true">
-        <div style="position: absolute; inset: 0; transform: translateY(-20px);">
+        <!-- translateY in cqh (1% of the circle's height), not px, so the whole
+             stack keeps the same vertical offset proportionally at every
+             viewport. -20px at the 525px reference circle = -3.81cqh. -->
+        <div style="position: absolute; inset: 0; transform: translateY(-3.81cqh);">
         <p class="fig-ex__nums-row" style="top: calc(50% - 47.778cqh);">69690173514725389017205117491466</p>
         <p class="fig-ex__nums-row" style="top: calc(50% - 38.254cqh);">141592653589793238462643383279502</p>
         <p class="fig-ex__nums-row" style="top: calc(50% - 28.571cqh);" data-highlight="lining-proportional">88419716<b style="font-feature-settings:'lnum' 1,'pnum' 1">0123456789</b><b style="font-feature-settings:'zero' 1,'lnum' 1,'pnum' 1">0</b>9399375105820974944</p>
@@ -4034,7 +4084,11 @@
         // further), positive = starts earlier. Applied on all viewports.
         { sectionId: 'section-eight', labelSel: '.script-sec__ann-text', stemId: 'made-arrow-stem',  headId: 'made-arrow-head',  bias: -0.60 },
         { sectionId: 'section-nine',  labelSel: '.glyphs-sec__irony span', stemId: 'irony-arrow-stem', headId: 'irony-arrow-head', bias:  0.12 },
-        { sectionId: 'section-twelve', labelSel: '.acc__ann-text', stemId: 'acc-arrow-stem', headId: 'acc-arrow-head', bias: -0.48 },
+        // Anchored to the section bottom (the annotation sits bottom-left of a
+        // section taller than the viewport). bias 0 → starts as the section
+        // bottom reaches the viewport bottom, finishes at 0.5vh above it, so the
+        // whole reveal plays on screen. All viewports.
+        { sectionId: 'section-twelve', labelSel: '.acc__ann-text', stemId: 'acc-arrow-stem', headId: 'acc-arrow-head', anchor: 'bottom', bias: 0 },
         // Section 14: four arrows staggered later and further apart than the single-arrow
         // sections above, since they all share one (taller) section's scroll progress.
         { sectionId: 'section-fourteen', labelSel: '.fig-ex__lbl--lining',   stemId: 'lining-arrow-stem',   headId: 'lining-arrow-head',   bias: 0.75, mobileBias: -0.10, mobileRamp: 0.8 },
@@ -4086,9 +4140,17 @@
         // Write phase — no layout-affecting reads happen after this point.
         items.forEach(function (item) {
           const rect     = rects.get(item.section);
-          const centre   = rect.top + rect.height / 2;
+          // anchor:'bottom' keys the timing to the section's bottom edge instead
+          // of its centre. Needed when the annotation sits at the bottom of a
+          // section taller than the viewport: with the centre as the anchor, the
+          // whole reveal finished before the annotation had scrolled into view,
+          // and by how much depended on the section's height (so it differed per
+          // viewport). Off the bottom edge it's height-independent.
+          const anchorY  = item.cfg.anchor === 'bottom'
+            ? rect.bottom
+            : rect.top + rect.height / 2;
           const bias     = (item.cfg.bias || 0) + (isMobile ? (item.cfg.mobileBias || 0) : 0);
-          const raw      = (vh - centre) / (vh / 2);
+          const raw      = (vh - anchorY) / (vh / 2);
           // ramp < 1 compresses the transition into a shorter scroll distance
           // while keeping the same end point (raw = 1 - bias) — used to
           // delay the start of an animation without moving its finish.
@@ -4177,14 +4239,22 @@
       // itself is scaled 10% bigger there.
       const END_OFFSET_DESKTOP = -20;
       const END_OFFSET_MOBILE  = -70;
+      // The mobile offsets above were tuned at this width. Below it they're
+      // scaled down proportionally: the book scales with the viewport, so a
+      // constant px lift rode proportionally higher on a narrow phone (at 375px
+      // it covered the sum above the book). Desktop is left as-is.
+      const MOBILE_REF_WIDTH = 540;
 
       function update() {
         const vh = window.innerHeight;
-        const endOffset = window.matchMedia('(max-width: 640px)').matches ? END_OFFSET_MOBILE : END_OFFSET_DESKTOP;
+        const mobile = window.matchMedia('(max-width: 640px)').matches;
+        const scale = mobile ? window.innerWidth / MOBILE_REF_WIDTH : 1;
+        const startOffset = START_OFFSET * scale;
+        const endOffset = (mobile ? END_OFFSET_MOBILE : END_OFFSET_DESKTOP) * scale;
         const rect = img.getBoundingClientRect();
         const centre = rect.top + rect.height / 2;
         const progress = Math.max(0, Math.min(1, (vh - centre) / (vh / 2)));
-        const offset = START_OFFSET + (endOffset - START_OFFSET) * progress;
+        const offset = startOffset + (endOffset - startOffset) * progress;
         img.style.setProperty('--book-parallax-y', offset.toFixed(2) + 'px');
       }
 
@@ -4453,10 +4523,11 @@
 
         if (isMobile) {
           // Only "One of the best" (pathIdx 2) is visible on mobile. Window
-          // 0.333 → 0.778 of the 1.8vh range = rect.top 0.4vh → -0.4vh, an
-          // 0.8vh duration. This deliberately overlaps the selecting animation
-          // (0.45vh → 0.0) rather than following it, so both play together.
-          drawAnn(2, Math.max(0, Math.min(1, (progress - 0.333) / 0.444)));
+          // 0.333 → 0.667 of the 1.8vh range = rect.top 0.4vh → -0.2vh, a
+          // 0.6vh duration (same start, finishes earlier). This deliberately
+          // overlaps the selecting animation (0.45vh → 0.0) rather than
+          // following it, so both play together.
+          drawAnn(2, Math.max(0, Math.min(1, (progress - 0.333) / 0.333)));
         } else {
           // Desktop — spatial order: top-L → top-R → left → bottom-L → bottom-R
           const ORDER = [1, 3, 4, 2, 0];
