@@ -3559,11 +3559,21 @@
       const BOUNDARY_PAD      = 4;
       const BOUNDARY_STRENGTH = 0.35;
 
-      // [homePctX, homePctY, radius] — positions as fraction of leg__inner
+      // Margin a bubble keeps from the top of the screen once it gets there,
+      // as a fraction of viewport height.
+      const RISE_PAD          = 0.06;
+
+      // [homePctX, homePctY, radius, riseFrac]
+      //   homePct* — resting position, as a fraction of leg__inner
+      //   radius   — deliberately spread wide (34 / 15 / 24). They used to be
+      //              22 / 18 / 20, a 1.22x spread, which read as one bubble
+      //              repeated three times rather than three different bubbles.
+      //   riseFrac — extra top margin once risen (x viewport height), so the
+      //              three don't all settle onto the same line.
       const DEFS = [
-        [0.485, 0.065, 22], // top-center, between Open counters & Short ascenders
-        [0.038, 0.590, 18], // left-middle, between Wide glyphs (40%) & Uniform stroke (77%)
-        [0.762, 0.020, 20], // right-top, just above Short ascenders
+        [0.485, 0.065, 34, 0.00], // top-center, between Open counters & Short ascenders
+        [0.038, 0.590, 15, 0.10], // left-middle, between Wide glyphs (40%) & Uniform stroke (77%)
+        [0.762, 0.020, 24, 0.05], // right-top, just above Short ascenders
       ];
 
       const container = document.createElement('div');
@@ -3578,16 +3588,24 @@
                (v+jv)+'% '+(100-v-jv)+'% '+(v-jv)+'% '+(100-v+jv)+'%';
       }
 
-      let W = 0, H = 0;
+      let W = 0, H = 0, scale = 1;
       const bubs = [];
       let running = false, startTime = null, impulse = 0;
 
       function init() {
         W = inner.offsetWidth;
         H = inner.offsetHeight;
+        // Below 640px the CSS puts translateY(-150px) scale(0.5) on the
+        // container, so on-screen px are not the local px the physics runs in.
+        // Derive the factor once here (it only changes on resize) so the rise
+        // below can convert viewport distances into local ones.
+        const cr = container.getBoundingClientRect();
+        scale = (container.offsetHeight && cr.height)
+          ? cr.height / container.offsetHeight
+          : 1;
         bubs.length = 0;
         container.innerHTML = '';
-        DEFS.forEach(([px, py, r]) => {
+        DEFS.forEach(([px, py, r, riseFrac]) => {
           const el = document.createElement('div');
           el.className = 'bubble';
           el.style.width        = r * 2 + 'px';
@@ -3598,7 +3616,7 @@
           container.appendChild(el);
           const hx = px * W, hy = py * H;
           bubs.push({
-            el, r,
+            el, r, riseFrac,
             cx: hx, cy: hy,
             vx: (Math.random() - 0.5) * 1.5,
             vy: (Math.random() - 0.5) * 1.5,
@@ -3623,11 +3641,41 @@
           impulse *= 0.72;
         }
 
+        // ── Float to the top of the viewport ────────────────────────────
+        // homeCy is anchored to leg__inner, so the bubbles used to scroll away
+        // with the section — which on narrow viewports left them stranded
+        // behind the 1.9x Legibility artwork. Each one now holds its resting
+        // position until scrolling would carry it above the top of the screen,
+        // and from there sticks just below the top edge instead of leaving.
+        //
+        // This is a clamp, not a blend. A blend cannot work here: the
+        // top-centre bubble rests ~40px below the section's top edge, so its
+        // natural position exits the screen after ~74px of scroll — any ramp
+        // long enough to look deliberate finishes well after the bubble has
+        // already gone. max() is continuous, needs no duration, and leaves the
+        // at-rest composition (top-centre above ACE, left-middle, right-top)
+        // byte-identical on every breakpoint.
+        //
+        // Read off the container's own rect, which already includes the mobile
+        // translateY(-150px) scale(0.5), so `scale` converts screen px back
+        // into the local px the physics runs in.
+        const crect  = container.getBoundingClientRect();
+        const vhLoc  = window.innerHeight / scale;          // viewport height, local px
+        const topLoc = -crect.top / scale;                  // viewport top,    local px
+
         bubs.forEach((b, i) => {
           b.el.style.opacity = String(Math.min(1, elapsed / 1.5));
 
+          // Never above the top edge (outer max), never past the container's
+          // bottom edge (outer min) — the latter so they eventually scroll away
+          // with the section instead of trailing over section three.
+          const homeY = Math.min(
+            H - b.r - BOUNDARY_PAD,
+            Math.max(b.homeCy, topLoc + vhLoc * (RISE_PAD + b.riseFrac) + b.r)
+          );
+
           const tx = b.homeCx + b.ampX * Math.sin(elapsed * DRIFT_SPEED * b.freqX + b.phaseX);
-          const ty = b.homeCy + b.ampY * Math.sin(elapsed * DRIFT_SPEED * b.freqY + b.phaseY);
+          const ty = homeY     + b.ampY * Math.sin(elapsed * DRIFT_SPEED * b.freqY + b.phaseY);
           b.vx += (tx - b.cx) * SPRING_K;
           b.vy += (ty - b.cy) * SPRING_K;
 
@@ -4926,6 +4974,18 @@
       requestAnimationFrame(() => { init(); update(); });
       window.addEventListener('scroll', update, { passive: true });
     })();
+
+    // ── Service worker registration ─────────────────────────────────────
+    // Required for Chrome on Android to install this as a real webapp and so
+    // actually use the maskable icons in site.webmanifest. See sw.js — it
+    // caches nothing, it exists purely to satisfy that requirement.
+    // Skipped on file:// (service workers need a secure origin, and the local
+    // workflow opens index.html directly).
+    if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('sw.js').catch(function () { /* non-fatal */ });
+      });
+    }
   </script>
 </body>
 </html>
