@@ -4145,7 +4145,11 @@
         { sectionId: 'section-fourteen', labelSel: '.fig-ex__lbl--opentype', stemId: 'opentype-arrow-stem', headId: 'opentype-arrow-head', bias: -0.50 },
         // Positive bias so it finishes with less scroll — section 15 is followed
         // by a short section 16, leaving little room for the reveal to complete.
-        { sectionId: 'section-fifteen', labelSel: '.book-sec__cta', stemId: 'google-arrow-stem', headId: 'google-arrow-head', bias: 0.55, ramp: 0.6 },
+        // Pinned to the page end rather than to the section (see anchor:
+        // 'page-end' in update) — it's the last annotation on the page and must
+        // finish exactly as the scroll runs out. ramp 0.6 = a 0.3vh duration,
+        // i.e. it plays over the final 0.3vh of scroll.
+        { sectionId: 'section-fifteen', labelSel: '.book-sec__cta', stemId: 'google-arrow-stem', headId: 'google-arrow-head', anchor: 'page-end', ramp: 0.6 },
       ].map(function (cfg) {
         const section = document.getElementById(cfg.sectionId);
         if (!section) return null;
@@ -4184,6 +4188,12 @@
         items.forEach(function (item) {
           if (!rects.has(item.section)) rects.set(item.section, item.section.getBoundingClientRect());
         });
+        // Scroll left until the page bottom, for anchor:'page-end' below. Read
+        // here with the rects — scrollHeight forces layout, and the write phase
+        // must stay read-free.
+        const docEl     = document.documentElement;
+        const maxScroll = Math.max(0, docEl.scrollHeight - vh);
+        const remaining = Math.max(0, maxScroll - (window.scrollY || docEl.scrollTop || 0));
 
         // Write phase — no layout-affecting reads happen after this point.
         items.forEach(function (item) {
@@ -4204,7 +4214,22 @@
           // delay the start of an animation without moving its finish.
           // mobileRamp overrides it below 640px, leaving desktop timing alone.
           const ramp     = (isMobile && item.cfg.mobileRamp) || item.cfg.ramp || 1;
-          const progress = Math.max(0, Math.min(1, (raw + bias - (1 - ramp)) / ramp));
+
+          // anchor:'page-end' keys the reveal to the bottom of the DOCUMENT
+          // rather than to its own section, so progress is guaranteed to reach
+          // 1 exactly as the page stops scrolling. Section-relative timing
+          // can't promise that: how much scroll remains below a section depends
+          // on the viewport, and at 540px there wasn't enough left for the
+          // arrowhead to finish, so it stayed half-drawn. `ramp` keeps its
+          // meaning here (1 unit = 0.5vh), so the duration is unchanged — only
+          // the end point is pinned. `bias` is ignored in this mode.
+          let progress;
+          if (item.cfg.anchor === 'page-end') {
+            const durationPx = Math.max(1, ramp * (vh / 2));
+            progress = Math.max(0, Math.min(1, 1 - remaining / durationPx));
+          } else {
+            progress = Math.max(0, Math.min(1, (raw + bias - (1 - ramp)) / ramp));
+          }
 
           // Label fades in 0–40 %
           if (item.label) item.label.style.opacity =
@@ -4473,6 +4498,32 @@
       requestAnimationFrame(update);
     })();
 
+    // ── Annotation line-draw offset (shared by sections 7, 10 and 13) ────
+    //
+    // Every annotation reveals dot → line → label, and the line must always
+    // draw away from the dot towards its text. About half the curves are
+    // authored the other way round in the SVG (start = text side), and those
+    // used to be reversed by animating stroke-dashoffset from -len to 0.
+    //
+    // WebKit renders a NEGATIVE stroke-dashoffset incorrectly, so in Safari
+    // exactly those curves drew text → dot — the wrong way — while Chrome was
+    // fine. That was every reversed path in all three sections: "Goodbye ugly
+    // letter combo's", "Discretionary ligatures", "Over 40 awesome ligatures!",
+    // "Tabular", "With Numerators & Denominators", "With Superiors &
+    // Inferiors", plus "No pesky gaps" and "Consistent spacing".
+    //
+    // Fix: never emit a negative offset. A single-value dasharray of `len`
+    // repeats as "len len", so the pattern's period is 2*len and any offset is
+    // equivalent modulo that period. len*(1+t) is therefore the same offset as
+    // -len*(1-t) — geometrically identical, always positive. Chrome is
+    // unaffected by construction; Safari now matches it.
+    function annDashOffset(el, lineT) {
+      const len = parseFloat(el.dataset.len);
+      return parseFloat(el.dataset.dir) < 0
+        ? len * (1 + lineT)   // reveals from the path END (the dot side)
+        : len * (1 - lineT);  // reveals from the path START
+    }
+
     // ── SECTION 7: KERNING ANNOTATIONS ─────────────────────────────────
     (function () {
       'use strict';
@@ -4508,7 +4559,9 @@
         paths.forEach((p, i) => {
           const len = p.getTotalLength();
           p.style.strokeDasharray  = len;
-          p.style.strokeDashoffset = KERN_REV.has(i) ? -len : len;
+          // len hides the stroke in BOTH directions (see annDashOffset at
+          // lineT 0) — no negative value needed here either.
+          p.style.strokeDashoffset = len;
           p.dataset.len = len;
           p.dataset.dir = KERN_REV.has(i) ? '-1' : '1';
         });
@@ -4565,7 +4618,7 @@
           const lineT = t < 0.20 ? 0 : Math.min(1, (t - 0.20) / 0.60);
           const lblT  = t < 0.75 ? 0 : Math.min(1, (t - 0.75) / 0.25);
           if (dot) dot.style.opacity = dotT;
-          path.style.strokeDashoffset = parseFloat(path.dataset.dir) * parseFloat(path.dataset.len) * (1 - lineT);
+          path.style.strokeDashoffset = annDashOffset(path, lineT);
           if (lbl) lbl.style.opacity = lblT;
         };
 
@@ -4624,7 +4677,7 @@
         paths.forEach((p, i) => {
           const len = p.getTotalLength();
           p.style.strokeDasharray  = len;
-          p.style.strokeDashoffset = FIG_REV.has(i) ? -len : len;
+          p.style.strokeDashoffset = len;   // hidden in both directions
           p.dataset.len = len;
           p.dataset.dir = FIG_REV.has(i) ? '-1' : '1';
         });
@@ -4640,7 +4693,7 @@
         const lineT = t < 0.20 ? 0 : Math.min(1, (t - 0.20) / 0.60);
         const lblT  = t < 0.75 ? 0 : Math.min(1, (t - 0.75) / 0.25);
         if (dot) dot.style.opacity = dotT;
-        path.style.strokeDashoffset = parseFloat(path.dataset.dir) * parseFloat(path.dataset.len) * (1 - lineT);
+        path.style.strokeDashoffset = annDashOffset(path, lineT);
         if (lbl) lbl.style.opacity = lblT;
         if (pathIdx === 2 && summaryLbl) summaryLbl.style.opacity = lblT;
       };
@@ -4892,7 +4945,7 @@
         pathsC.forEach((p, i) => {
           const len = p.getTotalLength();
           p.style.strokeDasharray  = len;
-          p.style.strokeDashoffset = LIGA_REV.has(i) ? -len : len;
+          p.style.strokeDashoffset = len;   // hidden in both directions
           p.dataset.len = len;
           p.dataset.dir = LIGA_REV.has(i) ? '-1' : '1';
         });
@@ -4949,10 +5002,10 @@
           const lblT  = t < 0.75 ? 0 : Math.min(1, (t - 0.75) / 0.25);
 
           if (dot) dot.style.opacity = dotT;
-          path.style.strokeDashoffset = parseFloat(path.dataset.dir) * parseFloat(path.dataset.len) * (1 - lineT);
+          path.style.strokeDashoffset = annDashOffset(path, lineT);
           // secondary path animates with "Goodbye" (pathsC[0])
           if (pathIdx === 0 && secPath) {
-            secPath.style.strokeDashoffset = parseFloat(secPath.dataset.dir) * parseFloat(secPath.dataset.len) * (1 - lineT);
+            secPath.style.strokeDashoffset = annDashOffset(secPath, lineT);
           }
           // Blob pops a beat after this annotation's text has finished fading in
           const blobIn = progress >= (step * GAP + WINDOW + BEAT);
