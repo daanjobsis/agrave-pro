@@ -3939,21 +3939,31 @@
       // or a different size than the auto-measured guess. That makes automatic
       // sizing/centering land off for some ligatures (not "luck" — it's
       // per-glyph). This table nudges each one by hand:
-      // [dx, dy, widthPx, heightPx, widthDeltaPx, heightDeltaPx] — dx/dy in em
-      // (relative to that ligature's own font-size, so position stays
-      // proportional at any mobile width).
-      // widthPx/heightPx are an ABSOLUTE size override in px (measured at the
-      // viewport you're testing at) — use `null` to keep the auto-measured size.
+      // [dx, dy, widthPx, heightPx, widthDeltaPx, heightDeltaPx, widthEm, heightEm]
+      // — dx/dy in em (relative to that ligature's own font-size, so position
+      // stays proportional at any mobile width).
+      // widthEm/heightEm are the PREFERRED size override: an absolute size in em,
+      // so it tracks the font-size and stays right across the whole mobile range.
+      // widthPx/heightPx are the same thing in raw px, and are viewport-LOCKED —
+      // they only look correct at the width they were measured at, because
+      // .lex__text is clamp(18px, 5.2vw, 30px), i.e. 19.5px at 375 and 28.08px at
+      // 540. Prefer the em form; use px only as a stopgap.
       // widthDeltaPx/heightDeltaPx are added ON TOP of the auto-measured size
-      // (only used when widthPx/heightPx above are null) — this is the normal
-      // way to nudge a blob's size: e.g. widthDeltaPx: -2 means "2px narrower
-      // than whatever the auto-measure comes out to", no live measuring needed.
+      // (only used when no override above is set) — this is the normal way to
+      // nudge a blob's size: e.g. widthDeltaPx: -2 means "2px narrower than
+      // whatever the auto-measure comes out to", no live measuring needed.
       // Index order matches DOM order of .lex-hl__char:
       // 0 ve, 1 ct, 2 ffi, 3 fi(sacrifice), 4 fi(prefixes), 5 Wh, 6 fr, 7 tt,
       // 8 ft, 9 www, 10 IJ, 11 om, 12 ti, 13 st, 14 Th
       var mobileNudge = [
-        [0.034, 0, null, null, -6, -8], [0, 0, null, null, -14, -8], [-0.09, -0.14, null, null, -8, 0], [0.033, 0, null, 52.5, -6, 0], [0.066, -0.133, null, null, -7, -10],
-        [-0.067, 0, 50, null, 0, -6], [-0.067, -0.1, null, null, -8, -4], [0.067, 0, null, null, -4, -10], [0.033, -0.167, null, null, -6, -8], [0.017, 0.066, null, null, -10, -10],
+        [0.034, 0, null, null, -6, -8], [0, 0, null, null, -14, -8], [-0.09, -0.14, null, null, -8, 0],
+        // fi (sacrifice) — em form, converted from the old viewport-locked
+        // 52.5px height as measured at 540px / fs 28.08. Width stays on
+        // auto-measure minus 6px.
+        [0.033, 0, null, null, -6, 0, null, 1.87], [0.066, -0.133, null, null, -7, -10],
+        // Wh — em form, converted from the old viewport-locked 50px width (and
+        // its auto-height minus 6px), both as measured at 540px / fs 28.08.
+        [-0.067, 0, null, null, 0, 0, 1.78, 1.64], [-0.067, -0.1, null, null, -8, -4], [0.067, 0, null, null, -4, -10], [0.033, -0.167, null, null, -6, -8], [0.017, 0.066, null, null, -10, -10],
         [-0.1, 0.033, null, null, -4, 0], [0.034, 0.134, null, null, 4, -14], [0.034, -0.067, null, null, -10, -14], [0.034, 0, null, null, -13, -14], [-0.1, -0.1, null, null, -6, -4]
       ];
 
@@ -3975,8 +3985,19 @@
           var nudge = mobileNudge[i] || [0, 0, null, null, 0, 0];
           var baseW = cRect.width + padX * 2;
           var baseH = fs * 1.05 + padY * 2;
-          p.cssBlob.style.width = (nudge[2] != null ? nudge[2] : baseW + (nudge[4] || 0)) + 'px';
-          p.cssBlob.style.height = (nudge[3] != null ? nudge[3] : baseH + (nudge[5] || 0)) + 'px';
+          // Precedence: em override → px override → auto-measure + px delta.
+          // The em form comes first because it is the only one that holds across
+          // the whole mobile range (see the table's comment).
+          p.cssBlob.style.width = (
+            nudge[6] != null ? nudge[6] * fs :
+            nudge[2] != null ? nudge[2] :
+            baseW + (nudge[4] || 0)
+          ) + 'px';
+          p.cssBlob.style.height = (
+            nudge[7] != null ? nudge[7] * fs :
+            nudge[3] != null ? nudge[3] :
+            baseH + (nudge[5] || 0)
+          ) + 'px';
           var cx = cRect.left + cRect.width / 2 - layerRect.left;
           var cy = cRect.top + cRect.height / 2 - layerRect.top;
           p.cssBlob.style.left = (cx + nudge[0] * fs) + 'px';
@@ -4018,14 +4039,43 @@
         }
       }
 
+      // Every blob's position and size comes from measuring its ligature's text
+      // box, so a measurement is only valid once 'Agrave Pro' is actually
+      // rendering. The scroll listener below is live immediately, though, and on
+      // a reload with this section already in view the browser restores the
+      // scroll position and fires scroll straight away — that used to build the
+      // blobs against the Arial FALLBACK metrics, and because
+      // buildMobilePairs()/buildDesktopPairs() both cache, nothing ever
+      // re-measured afterwards (short of a window resize). Result: every blob
+      // stranded behind the wrong letters.
+      //
+      // So: drop both caches and re-measure once the font lands, and again on
+      // any later reflow of the paragraph.
+      function remeasure() {
+        desktopPairs = null;   // re-pair blobs to chars at their real positions
+        sizeMobileBlobs();     // no-op until the mobile blobs exist
+        update();
+      }
+
       (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(function () {
-        requestAnimationFrame(update);
+        requestAnimationFrame(remeasure);
       });
       window.addEventListener('scroll', update, { passive: true });
-      window.addEventListener('resize', function () {
-        sizeMobileBlobs();
-        update();
-      }, { passive: true });
+      window.addEventListener('resize', remeasure, { passive: true });
+
+      // Catches anything the two hooks above miss — a late font swap, the mobile
+      // address bar collapsing, an orientation change — by watching the
+      // paragraph's own box instead of guessing at causes. Coalesced into one
+      // rAF so a burst of reflows costs a single re-measure.
+      var lexText = section.querySelector('.lex__text');
+      if (lexText && window.ResizeObserver) {
+        var queued = false;
+        new ResizeObserver(function () {
+          if (queued) return;
+          queued = true;
+          requestAnimationFrame(function () { queued = false; remeasure(); });
+        }).observe(lexText);
+      }
     })();
     // ── SECTION 11: decorative blobs — gentle scroll parallax (2 top, 3 bottom) ──
     (function () {
