@@ -14,7 +14,7 @@ See the OFL.txt file for details.
 - `sources/` — Glyphs source files
 - `fonts/` — exported TTF files
 - `documentation/` —preview images
-- `doc/` —preview onepage
+- `docs/` —preview onepager
 
 ## Building the fonts
 
