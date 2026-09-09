@@ -1,7 +1,0 @@
-sources:
-  - sources/AgravePro.glyphs
-
-outputDir: fonts
-
-buildStatic: true
-buildVariable: false
