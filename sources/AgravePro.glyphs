@@ -48,6 +48,10 @@ tag = slng;
 {
 name = localizedManufacturer;
 value = "Dustbunnies Everywhere";
+},
+{
+name = "Variable Font Origin";
+value = "4692E1D1-BCA0-47EF-98E6-2E6F4483D11B";
 }
 );
 date = "2026-02-02 20:14:33 +0000";
@@ -963,7 +967,7 @@ name = "Axis Location";
 value = (
 {
 Axis = Weight;
-Location = 300;
+Location = 200;
 }
 );
 }
@@ -2450,7 +2454,7 @@ unicode = 256;
 glyphname = Aogonek;
 kernLeft = A;
 kernRight = A;
-lastChange = "2026-01-28 12:42:43 +0000";
+lastChange = "2026-09-09 15:09:25 +0000";
 layers = (
 {
 anchors = (
@@ -2473,8 +2477,8 @@ nodes = (
 (479.343,-80,o),
 (515.454,-58,o),
 (549.861,-46,cs),
-(573.768,-38,o),
-(565.159,0.757,o),
+(574,-38,o),
+(565,1,o),
 (535.162,-9,c),
 (507.77,51.846,o),
 (461.491,192.064,o),
