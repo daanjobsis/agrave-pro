@@ -2,6 +2,7 @@
 # This file is distinct from the CONTRIBUTORS.txt file.
 # See the latter for an explanation.
 #
-# Names should be added to this file as:
+# Names should be added to this file as: 
+Daan Jobsis <daanjobsis@gmail.com>
 
 
