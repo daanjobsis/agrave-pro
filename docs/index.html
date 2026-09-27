@@ -1157,6 +1157,25 @@
       margin-bottom: -120px;
       transform: translateY(75px);
     }
+    .glyphs-sec__shirt-img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    /* Positioned to match the hang tag's spot in the original shirt photo —
+       left/top/width are percentages of the shirt image's native 2364×2360px
+       so the tag stays pinned to the collar at any viewport width. */
+    .glyphs-sec__label {
+      position: absolute;
+      left: 43.994%;
+      top: calc(6.653% + 10px);
+      width: 14.382%;
+      height: auto;
+      /* Pivot at the top of the string (where it ties to the collar) so the
+         scroll-driven swing below rotates around a fixed point, not the tag's
+         own centre. */
+      transform-origin: 39.6% 6%;
+    }
 
     /* Mobile only: scale the shirt + script document images to 115%. Done via width
        (×1.15, height auto) rather than transform:scale, because both images have
@@ -2701,7 +2720,10 @@
         </div>
       </div>
     </div>
-    <img class="glyphs-sec__shirt" src="assets/t-shirt.webp" alt="Blue t-shirt featuring the Agrave Pro mustache glyph" />
+    <div class="glyphs-sec__shirt">
+      <img class="glyphs-sec__shirt-img" src="assets/t-shirt.webp" alt="Blue t-shirt featuring the Agrave Pro mustache glyph" />
+      <img class="glyphs-sec__label" src="assets/t-shirt-label.webp" alt="Agràve hang tag" />
+    </div>
     <div class="glyphs-sec__waves-clip">
       <svg class="glyphs-sec__waves" width="2078" height="1158" viewBox="0 0 2078 1158" preserveAspectRatio="xMidYMin meet" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
 <path class="wave-band" data-i="0" d="M1270.17 926.661C1205.17 897.781 1124.52 881.928 1056.89 905.191C1047.8 908.335 1038.94 911.818 1030.38 915.683L1022.51 919.248L1014.91 922.721C891.585 979.243 816.287 1024.14 667.963 1028.17C519.639 1032.2 485.9 963.536 370.115 953.029C337.143 950.036 319.444 973.502 298.05 984.275C262.721 1002.07 234.396 1032.31 187.519 1039.75C140.32 1047.24 56.6219 1036.64 1.87598 1018.71L0 1018.09V1078.4C52.9815 1095.92 143.983 1101.93 188.686 1091.26C237.144 1079.69 263.618 1044.79 296.285 1024.11L298.344 1022.82C317.94 1010.83 330.34 987.371 367.671 991.388C477.544 1003.21 529.228 1107.23 667.963 1096.35C815.65 1085.12 901.064 1005.61 1030.16 947.302C1038.74 943.422 1047.63 940.075 1056.76 937.2C1124.92 915.83 1206.02 931.652 1269.73 960.693C1317.47 982.522 1346.19 1017.93 1385.91 1049.43C1400.52 1061.02 1415.96 1072.22 1431.94 1082.56C1493.6 1122.44 1560.9 1146.86 1624.09 1156.3C1677.37 1164.25 1732.05 1142.98 1785.04 1120.29L1788.78 1118.68C1798.66 1114.43 1808.58 1110.21 1818.41 1106.09L1825.76 1103.01L1835.5 1098.97L1841.73 1096.42C1880.99 1080.41 1916.6 1067.65 1954 1061.49V997.18C1910.85 1002.25 1869.67 1015.3 1824.76 1032.2C1812.21 1036.92 1799.66 1041.79 1787.43 1046.99L1767.89 1055.26L1763.1 1057.27L1758.32 1059.27C1713.67 1077.83 1669.65 1093.95 1626.71 1094.74C1565.23 1095.88 1500.44 1080.67 1435.95 1042.89C1419.89 1033.48 1404.11 1022.83 1388.9 1011.6C1348.94 982.116 1318.03 948.046 1270.17 926.661Z" fill="#F9F1EB"/>
@@ -5044,6 +5066,39 @@
         if (!ticking) { ticking = true; requestAnimationFrame(apply); }
       }, { passive: true });
       apply();
+    })();
+
+    // ── LABEL: directional swing on scroll ────────────────────────────────
+    // Scrolling down leans the tag left, scrolling up leans it right — the
+    // lean always tracks scroll direction and never crosses to the other
+    // side mid-gesture. It eases toward a target angle derived from a
+    // smoothed scroll velocity, and the target (and angle) relax back to 0
+    // once scrolling stops, so it settles without swinging past centre.
+    // Pivots at the string's top (see transform-origin above), never the
+    // shirt's own translateY, so the swing and the shirt drift compose cleanly.
+    (function () {
+      'use strict';
+      const label = document.querySelector('.glyphs-sec__label');
+      if (!label) return;
+      const IMPULSE = 0.6;          // scroll speed → lean strength
+      const VELOCITY_SMOOTH = 0.12; // smooths raw per-frame scroll delta into a velocity estimate
+      const ANGLE_EASE = 0.05;      // how quickly the tag eases toward the current lean (lower = slower swing)
+      const MAX_ANGLE = 24;         // degrees
+      let smoothVel = 0;
+      let angle = 0;
+      let lastY = window.scrollY;
+      function tick() {
+        const y = window.scrollY;
+        const rawDelta = y - lastY;
+        lastY = y;
+        smoothVel += (rawDelta - smoothVel) * VELOCITY_SMOOTH;
+        let target = -smoothVel * IMPULSE; // scroll down (positive) → lean left (negative)
+        target = Math.max(-MAX_ANGLE, Math.min(MAX_ANGLE, target));
+        angle += (target - angle) * ANGLE_EASE;
+        label.style.transform = 'rotate(' + angle.toFixed(2) + 'deg)';
+        requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
     })();
 
     // ── SECTION 10: LIGATURES ANNOTATIONS ───────────────────────────────
