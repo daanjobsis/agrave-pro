@@ -1,5 +1,5 @@
 {
-.appVersion = "3516";
+.appVersion = "3532";
 .formatVersion = 3;
 axes = (
 {
@@ -919,7 +919,7 @@ tag = kern;
 fontMaster = (
 {
 axesValues = (
-200
+100
 );
 customParameters = (
 {
@@ -967,7 +967,7 @@ name = "Axis Location";
 value = (
 {
 Axis = Weight;
-Location = 200;
+Location = 100;
 }
 );
 }
@@ -995,7 +995,7 @@ pos = 570;
 {
 }
 );
-name = ExtraLight;
+name = Thin;
 userData = {
 GSCornerRadius = 15;
 GSOffsetHorizontal = -3;
@@ -1007,7 +1007,7 @@ visible = 1;
 },
 {
 axesValues = (
-700
+500
 );
 customParameters = (
 {
@@ -1055,7 +1055,7 @@ name = "Axis Location";
 value = (
 {
 Axis = Weight;
-Location = 700;
+Location = 500;
 }
 );
 }
@@ -1083,7 +1083,7 @@ pos = 570;
 {
 }
 );
-name = Bold;
+name = Medium;
 userData = {
 GSOffsetHorizontal = 20;
 GSOffsetProportional = 1;
@@ -92699,6 +92699,27 @@ width = 147;
 instances = (
 {
 axesValues = (
+100
+);
+customParameters = (
+{
+name = "Axis Location";
+value = (
+{
+Axis = Weight;
+Location = 100;
+}
+);
+}
+);
+instanceInterpolations = {
+"4692E1D1-BCA0-47EF-98E6-2E6F4483D11B" = 1;
+};
+name = Thin;
+weightClass = 100;
+},
+{
+axesValues = (
 200
 );
 customParameters = (
@@ -92713,7 +92734,8 @@ Location = 200;
 }
 );
 instanceInterpolations = {
-"4692E1D1-BCA0-47EF-98E6-2E6F4483D11B" = 1;
+"4692E1D1-BCA0-47EF-98E6-2E6F4483D11B" = 0.75;
+"7911D52E-6854-4A1B-8A16-F908BFF91E8F" = 0.25;
 };
 name = ExtraLight;
 weightClass = 200;
@@ -92734,15 +92756,15 @@ Location = 300;
 }
 );
 instanceInterpolations = {
-"4692E1D1-BCA0-47EF-98E6-2E6F4483D11B" = 0.8;
-"7911D52E-6854-4A1B-8A16-F908BFF91E8F" = 0.2;
+"4692E1D1-BCA0-47EF-98E6-2E6F4483D11B" = 0.5;
+"7911D52E-6854-4A1B-8A16-F908BFF91E8F" = 0.5;
 };
 name = Light;
 weightClass = 300;
 },
 {
 axesValues = (
-500
+400
 );
 customParameters = (
 {
@@ -92756,14 +92778,14 @@ Location = 400;
 }
 );
 instanceInterpolations = {
-"4692E1D1-BCA0-47EF-98E6-2E6F4483D11B" = 0.4;
-"7911D52E-6854-4A1B-8A16-F908BFF91E8F" = 0.6;
+"4692E1D1-BCA0-47EF-98E6-2E6F4483D11B" = 0.25;
+"7911D52E-6854-4A1B-8A16-F908BFF91E8F" = 0.75;
 };
 name = Regular;
 },
 {
 axesValues = (
-570
+500
 );
 customParameters = (
 {
@@ -92777,55 +92799,10 @@ Location = 500;
 }
 );
 instanceInterpolations = {
-"4692E1D1-BCA0-47EF-98E6-2E6F4483D11B" = 0.26;
-"7911D52E-6854-4A1B-8A16-F908BFF91E8F" = 0.74;
+"7911D52E-6854-4A1B-8A16-F908BFF91E8F" = 1;
 };
 name = Medium;
 weightClass = 500;
-},
-{
-axesValues = (
-620
-);
-customParameters = (
-{
-name = "Axis Location";
-value = (
-{
-Axis = Weight;
-Location = 600;
-}
-);
-}
-);
-instanceInterpolations = {
-"4692E1D1-BCA0-47EF-98E6-2E6F4483D11B" = 0.16;
-"7911D52E-6854-4A1B-8A16-F908BFF91E8F" = 0.84;
-};
-name = SemiBold;
-weightClass = 600;
-},
-{
-axesValues = (
-700
-);
-customParameters = (
-{
-name = "Axis Location";
-value = (
-{
-Axis = Weight;
-Location = 700;
-}
-);
-}
-);
-instanceInterpolations = {
-"7911D52E-6854-4A1B-8A16-F908BFF91E8F" = 1;
-};
-isBold = 1;
-name = Bold;
-weightClass = 700;
 }
 );
 kerningLTR = {
@@ -108080,8 +108057,7 @@ key = licenses;
 values = (
 {
 language = dflt;
-value = "This Font Software is licensed under the SIL Open Font License, Version 1.1.
-This license is available with a FAQ at: openfontlicense.org";
+value = "This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: https://openfontlicense.org";
 }
 );
 },
@@ -108118,5 +108094,5 @@ GSDimensionPlugin.Dimensions = {
 };
 };
 versionMajor = 1;
-versionMinor = 8;
+versionMinor = 100;
 }
