@@ -54930,10 +54930,9 @@ shapes = (
 ref = s.sc;
 },
 {
-angle = -179.00014;
-pos = (381.042,22.468);
+angle = -0.99986;
+pos = (83.752,22.468);
 ref = caroncomb;
-scale = (1,-1);
 }
 );
 width = 431;
