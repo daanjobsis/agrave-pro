@@ -92764,7 +92764,7 @@ weightClass = 300;
 },
 {
 axesValues = (
-400
+410
 );
 customParameters = (
 {
@@ -92778,8 +92778,8 @@ Location = 400;
 }
 );
 instanceInterpolations = {
-"4692E1D1-BCA0-47EF-98E6-2E6F4483D11B" = 0.25;
-"7911D52E-6854-4A1B-8A16-F908BFF91E8F" = 0.75;
+"4692E1D1-BCA0-47EF-98E6-2E6F4483D11B" = 0.225;
+"7911D52E-6854-4A1B-8A16-F908BFF91E8F" = 0.775;
 };
 name = Regular;
 },
