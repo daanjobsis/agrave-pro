@@ -14,6 +14,7 @@ See the OFL.txt file for details.
 - `sources/` — Glyphs source files
 - `fonts/` — exported TTF files
 - `documentation/` —preview images
+- `documentation/instagram` —instagram square promo images
 - `docs/` —preview onepager
 
 ## Building the fonts
@@ -22,5 +23,5 @@ The fonts are built from Glyphs sources.
 
 ## Specimens
 
-Preview images can be found in the `documentation/` folder.
+Preview images can be found in the `documentation/` and `documentation/instagram` folders.
 View the live specimen https://daanjobsis.github.io/agrave-pro/
