@@ -415,13 +415,12 @@
       display: grid;
       place-items: center;
       position: relative;
-      z-index: 1;
     }
     .tile__stack > .tile__letter { grid-area: 1 / 1; }
 
     .tile__letter--bold    { font-weight: 700; mix-blend-mode: multiply; opacity: 0.4; }
-    .tile__letter--regular { font-weight: 400; mix-blend-mode: multiply; opacity: 0.75; }
-    .tile__letter--light   { font-weight: 200; }
+    .tile__letter--regular { font-weight: 400; mix-blend-mode: multiply; opacity: 0.4; }
+    .tile__letter--thin    { font-weight: 100; mix-blend-mode: multiply; }
 
     /* E + V: bottom=bold 40% normal #fff, middle=regular 40% multiply, top=light 100% */
     .tile--e .tile__letter--bold,
@@ -439,13 +438,13 @@
 
     /* À tile: bottom=bold 40% multiply #347DAA, middle=regular 75% multiply, top=light 100% multiply */
     .tile--agrave .tile__letter--bold  { font-weight: 700; mix-blend-mode: multiply; opacity: 0.4; color: #347DAA; }
-    .tile--agrave .tile__letter--light { mix-blend-mode: multiply; }
+    .tile--agrave .tile__letter--thin { mix-blend-mode: multiply; }
 
     /* A tile: bottom=bold 40% multiply #347DAA, middle=regular 75% multiply, top=light 100% */
     .tile--a .tile__letter          { font-size: min(99cqi, 99cqh); }
-    .tile--a .tile__stack           { width: 100%; height: 100%; place-items: center; transform: translateY(30px); }
-    .tile--a .tile__letter--bold    { mix-blend-mode: normal; opacity: 0.4; color: #347DAA; }
-    .tile--a .tile__letter--regular { mix-blend-mode: normal; }
+    .tile--a .tile__stack           { width: 100%; height: 100%; place-items: center; top: 30px; }
+    .tile--a .tile__letter--bold    { mix-blend-mode: multiply; opacity: 0.4; color: #347DAA; }
+    .tile--a .tile__letter--regular { mix-blend-mode: multiply; }
 
     /* Per-tile colours */
     .tile--e           { background: #286F9B; }
@@ -456,7 +455,7 @@
     .tile--v .tile__letter   { color: #fff; transform: translateY(8%); }
 
     .tile--a           { background: #D0D9D4; }
-    .tile--a .tile__letter   { color: var(--navy); }
+    .tile--a .tile__letter   { color: #347DAA; }
 
     .tile--agrave      { background: #EBF2F7; }
     .tile--agrave .tile__letter { color: #347DAA; transform: translateY(8%); }
@@ -653,7 +652,7 @@
     }
     .multi__subtitle strong {
       font-weight: 700;
-      color: rgba(255,255,255,0.75);
+      color: #EBF2F7;
     }
     .multi__langs {
       margin-top: clamp(88px, 6vw, 136px);
@@ -2222,7 +2221,7 @@
         <div class="tile__stack">
           <span class="tile__letter tile__letter--bold">E</span>
           <span class="tile__letter tile__letter--regular">E</span>
-          <span class="tile__letter tile__letter--light">E</span>
+          <span class="tile__letter tile__letter--thin">E</span>
         </div>
       </div>
 
@@ -2231,7 +2230,7 @@
         <div class="tile__stack">
           <span class="tile__letter tile__letter--bold">V</span>
           <span class="tile__letter tile__letter--regular">V</span>
-          <span class="tile__letter tile__letter--light">V</span>
+          <span class="tile__letter tile__letter--thin">V</span>
         </div>
       </div>
 
@@ -2243,7 +2242,7 @@
         <div class="tile__stack">
           <span class="tile__letter tile__letter--bold">A</span>
           <span class="tile__letter tile__letter--regular">A</span>
-          <span class="tile__letter tile__letter--light">A</span>
+          <span class="tile__letter tile__letter--thin">A</span>
         </div>
       </div>
 
@@ -2252,7 +2251,7 @@
         <div class="tile__stack">
           <span class="tile__letter tile__letter--bold">À</span>
           <span class="tile__letter tile__letter--regular">À</span>
-          <span class="tile__letter tile__letter--light">À</span>
+          <span class="tile__letter tile__letter--thin">À</span>
         </div>
       </div>
 
@@ -2261,7 +2260,7 @@
         <div class="tile__stack">
           <span class="tile__letter tile__letter--bold">R</span>
           <span class="tile__letter tile__letter--regular">R</span>
-          <span class="tile__letter tile__letter--light">R</span>
+          <span class="tile__letter tile__letter--thin">R</span>
         </div>
       </div>
 
@@ -2270,7 +2269,7 @@
         <div class="tile__stack">
           <span class="tile__letter tile__letter--bold">G</span>
           <span class="tile__letter tile__letter--regular">G</span>
-          <span class="tile__letter tile__letter--light">G</span>
+          <span class="tile__letter tile__letter--thin">G</span>
         </div>
       </div>
 
